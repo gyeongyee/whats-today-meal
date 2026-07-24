@@ -74,9 +74,18 @@ def test_new_diverse_menus_include_burrito():
     assert len(MENU_CATALOG) == 95
     assert by_name["카레"]["cuisine"] == "일식"
     assert by_name["난과 커리"]["cuisine"] == "인도"
-    assert by_name["로코모코"]["cuisine"] == "하와이안"
-    assert by_name["갈릭 쉬림프"]["cuisine"] == "하와이안"
+    assert by_name["로코모코"]["cuisine"] == "양식"
+    assert by_name["갈릭 쉬림프"]["cuisine"] == "양식"
+    assert by_name["포케"]["cuisine"] == "양식"
+    assert by_name["치킨"]["cuisine"] == "양식"
+    assert by_name["오므라이스"]["cuisine"] == "일식"
+    assert by_name["함박스테이크"]["cuisine"] == "일식"
     assert ALIASES["커리"] == "난과 커리"
+    southeast_asian = {
+        "쌀국수", "팟타이", "분짜", "반미", "월남쌈",
+        "나시고렝", "똠얌꿍", "태국커리", "카오팟",
+    }
+    assert all(by_name[name]["cuisine"] == "동남아" for name in southeast_asian)
 
 
 def test_team_recommendation_excludes_everyones_yesterday_meals():
