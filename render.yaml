@@ -10,8 +10,6 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: "3.13.5"
-      - key: KAKAO_REST_API_KEY
-        sync: false
       - key: AI_API_KEY
         sync: false
       - key: AI_BASE_URL

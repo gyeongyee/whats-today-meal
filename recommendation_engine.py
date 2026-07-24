@@ -52,6 +52,11 @@ class RecommendationEngine:
         request: RecommendRequest,
     ) -> str:
         tags = set(menu["tags"])
+        team_count = len(request.team_members)
+        if team_count:
+            if request.mode == "relaxed":
+                return f"{team_count + 1}명의 어제 메뉴는 피하면서 2~3일 전 조건을 풀어 모두의 선택 폭을 넓혔어요."
+            return f"{team_count + 1}명이 최근 먹은 메뉴들과 재료·조리법의 겹침이 적은 공동 점심 후보예요."
         if request.prefer_soup and "국물" in tags:
             return "최근 여러 끼니와의 겹침을 줄이면서 오늘의 국물 선호를 반영한 따뜻한 선택이에요."
         if request.prefer_light and "가벼움" in tags:
@@ -67,7 +72,17 @@ class RecommendationEngine:
         return f"{menu['cuisine']} 계열에서 부담 없이 시작하기 좋은 새로운 후보예요."
 
     async def recommend(self, request: RecommendRequest) -> RecommendResponse:
-        history_text = [request.yesterday, request.two_days_ago, request.three_days_ago]
+        history_text = [
+            ", ".join(
+                value
+                for value in [
+                    getattr(request, field),
+                    *(getattr(member, field) for member in request.team_members),
+                ]
+                if value
+            )
+            for field in ("yesterday", "two_days_ago", "three_days_ago")
+        ]
         histories_by_day = [profiles_of(day) for day in history_text]
 
         local_ranked: list[tuple[float, Menu, list[float]]] = []
@@ -139,13 +154,13 @@ class RecommendationEngine:
             engine=engine,
             engine_label="AI 의미 분석 적용" if engine == "ai" else "로컬 의미 분석 적용",
             relax_level=request.retry_count,
+            participant_count=1 + len(request.team_members),
             recommendations=[
                 RecommendationItem(
                     menu=menu["name"],
                     cuisine=menu["cuisine"],
                     kind=menu["kind"],
                     reason=reason,
-                    search_query=menu["name"],
                     similarity=round(max(similarities), 2),
                 )
                 for _, menu, similarities, reason in selected

@@ -2,7 +2,7 @@
 
 const STORAGE_KEY = "lunchMenuAI.v2";
 const LEGACY_KEY = "lunchHistory";
-const state = {x: null, y: null, retryCount: 0, selectedMenu: "", toastTimer: null};
+const state = {retryCount: 0, selectedMenu: "", toastTimer: null};
 const $ = (id) => document.getElementById(id);
 
 function localDate(offset = 0) {
@@ -18,9 +18,24 @@ function localDate(offset = 0) {
 function readStore() {
     try {
         const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
-        if (parsed && parsed.version === 2 && Array.isArray(parsed.meals)) return parsed;
+        if (parsed && parsed.version === 2 && Array.isArray(parsed.meals)) {
+            if (!Array.isArray(parsed.teamMembers)) parsed.teamMembers = [];
+            parsed.teamMembers = parsed.teamMembers.slice(0, 9).map((member, index) => {
+                const meals = Array.isArray(member.meals) ? member.meals : [
+                    {date: localDate(-1), menu: member.yesterday || ""},
+                    {date: localDate(-2), menu: member.twoDaysAgo || ""},
+                    {date: localDate(-3), menu: member.threeDaysAgo || ""},
+                ].filter((item) => item.menu);
+                return {
+                    id: member.id || `member-${index}-${Date.now()}`,
+                    name: String(member.name || `팀원 ${index + 1}`).slice(0, 20),
+                    meals,
+                };
+            });
+            return parsed;
+        }
     } catch (_) { /* 손상된 로컬 값은 초기화 */ }
-    return {version: 2, meals: [], today: null};
+    return {version: 2, meals: [], today: null, teamMembers: []};
 }
 
 function writeStore(store) {
@@ -62,7 +77,7 @@ function syncInputsFromStore() {
     $("yesterday").value = mealOn(store, localDate(-1));
     $("twoDaysAgo").value = mealOn(store, localDate(-2));
     $("threeDaysAgo").value = mealOn(store, localDate(-3));
-    $("address").value = localStorage.getItem("lunchAddress") || "";
+    renderTeamMembers();
     renderTimeline();
 }
 
@@ -75,6 +90,115 @@ function saveRecentInputs() {
     ].forEach(([offset, menu]) => upsertMeal(store, localDate(offset), menu));
     writeStore(store);
     renderTimeline();
+}
+
+function memberInput(labelText, field, value, placeholder) {
+    const label = document.createElement("label");
+    const span = document.createElement("span");
+    span.textContent = labelText;
+    const input = document.createElement("input");
+    input.dataset.field = field;
+    input.value = value || "";
+    input.maxLength = 120;
+    input.autocomplete = "off";
+    input.placeholder = placeholder;
+    input.addEventListener("change", saveTeamMembers);
+    label.append(span, input);
+    return label;
+}
+
+function collectTeamMembers() {
+    return [...document.querySelectorAll(".team-member-card")].map((card, index) => ({
+        id: card.dataset.id,
+        name: card.querySelector('[data-field="name"]').value.trim() || `팀원 ${index + 1}`,
+        yesterday: card.querySelector('[data-field="yesterday"]').value.trim(),
+        twoDaysAgo: card.querySelector('[data-field="twoDaysAgo"]').value.trim(),
+        threeDaysAgo: card.querySelector('[data-field="threeDaysAgo"]').value.trim(),
+    }));
+}
+
+function saveTeamMembers() {
+    const store = readStore();
+    store.teamMembers = collectTeamMembers().map((member) => {
+        const saved = store.teamMembers.find((item) => item.id === member.id);
+        const next = {...saved, id: member.id, name: member.name, meals: [...(saved?.meals || [])]};
+        [
+            [-1, member.yesterday],
+            [-2, member.twoDaysAgo],
+            [-3, member.threeDaysAgo],
+        ].forEach(([offset, menu]) => upsertPersonMeal(next, localDate(offset), menu));
+        return next;
+    });
+    writeStore(store);
+    renderTimeline();
+}
+
+function upsertPersonMeal(person, date, menu) {
+    person.meals = (person.meals || []).filter((item) => item.date !== date);
+    if (menu) person.meals.push({date, menu});
+    person.meals.sort((a, b) => b.date.localeCompare(a.date));
+    person.meals = person.meals.slice(0, 90);
+}
+
+function memberMealOn(member, date) {
+    return member.meals?.find((item) => item.date === date)?.menu || "";
+}
+
+function renderTeamMembers() {
+    const members = readStore().teamMembers.slice(0, 9);
+    const container = $("teamMembers");
+    container.replaceChildren();
+    $("teamEmpty").classList.toggle("hidden", members.length > 0);
+
+    members.forEach((member, index) => {
+        const card = document.createElement("article");
+        card.className = "team-member-card";
+        card.dataset.id = member.id;
+
+        const header = document.createElement("div");
+        header.className = "member-card-header";
+        const badge = document.createElement("span");
+        badge.textContent = `동료 ${index + 1}`;
+        const name = document.createElement("input");
+        name.className = "member-name";
+        name.dataset.field = "name";
+        name.value = member.name || `팀원 ${index + 1}`;
+        name.maxLength = 20;
+        name.setAttribute("aria-label", `${index + 1}번째 팀원 이름`);
+        name.addEventListener("change", saveTeamMembers);
+        const remove = makeButton("삭제", "remove-member-button", () => {
+            const store = readStore();
+            store.teamMembers = store.teamMembers.filter((item) => item.id !== member.id);
+            writeStore(store);
+            renderTeamMembers();
+            showToast("팀원을 목록에서 뺐어요.");
+        });
+        header.append(badge, name, remove);
+
+        const meals = document.createElement("div");
+        meals.className = "member-meals";
+        meals.append(
+            memberInput("어제", "yesterday", memberMealOn(member, localDate(-1)), "예: 제육볶음, 라면"),
+            memberInput("2일 전", "twoDaysAgo", memberMealOn(member, localDate(-2)), "예: 김치찌개"),
+            memberInput("3일 전", "threeDaysAgo", memberMealOn(member, localDate(-3)), "예: 초밥")
+        );
+        card.append(header, meals);
+        container.append(card);
+    });
+}
+
+function addTeamMember() {
+    const store = readStore();
+    if (store.teamMembers.length >= 9) return showToast("팀원은 최대 9명까지 추가할 수 있어요.");
+    const number = store.teamMembers.length + 1;
+    store.teamMembers.push({
+        id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+        name: `팀원 ${number}`,
+        meals: [],
+    });
+    writeStore(store);
+    renderTeamMembers();
+    $("teamMembers").lastElementChild?.querySelector(".member-name")?.focus();
 }
 
 function formatDate(dateString) {
@@ -103,6 +227,14 @@ async function apiFetch(url, options) {
 
 async function getRecommendations(mode = "strict") {
     saveRecentInputs();
+    saveTeamMembers();
+    const teamMembers = collectTeamMembers()
+        .map((member) => ({
+            name: member.name,
+            yesterday: member.yesterday,
+            two_days_ago: member.twoDaysAgo,
+            three_days_ago: member.threeDaysAgo,
+        }));
     const payload = {
         yesterday: $("yesterday").value.trim(),
         two_days_ago: $("twoDaysAgo").value.trim(),
@@ -112,6 +244,7 @@ async function getRecommendations(mode = "strict") {
         prefer_soup: $("preferSoup").checked,
         prefer_light: $("preferLight").checked,
         retry_count: state.retryCount,
+        team_members: teamMembers,
     };
     const button = $("recommendBtn");
     button.disabled = true;
@@ -142,9 +275,10 @@ function makeButton(label, className, handler) {
 
 function renderRecommendations(data) {
     $("recommendSection").classList.remove("hidden");
+    const groupLabel = data.participant_count > 1 ? `${data.participant_count}명의 ` : "";
     $("modeDescription").textContent = data.mode === "strict"
-        ? "최근 3일과 의미가 겹치는 메뉴를 낮은 순위로 조정했어요."
-        : `완화 ${data.relax_level}단계 · 어제와 같은 메뉴는 계속 제외했어요.`;
+        ? `${groupLabel}최근 3일과 의미가 겹치는 메뉴를 낮은 순위로 조정했어요.`
+        : `완화 ${data.relax_level}단계 · ${groupLabel}어제와 같은 메뉴는 계속 제외했어요.`;
     $("engineBadge").textContent = `✦ ${data.engine_label}`;
     const container = $("recommendations");
     container.replaceChildren();
@@ -171,10 +305,7 @@ function renderRecommendations(data) {
         reason.textContent = item.reason;
         const actions = document.createElement("div");
         actions.className = "card-actions";
-        actions.append(
-            makeButton("이걸로 결정", "choose-button", () => chooseMenu(item.menu, card)),
-            makeButton("주변 식당 ↗", "find-button", () => findRestaurants(item.search_query))
-        );
+        actions.append(makeButton("이걸로 결정", "choose-button", () => chooseMenu(item.menu, card)));
         card.append(top, title, meta, reason, actions);
         container.append(card);
     });
@@ -184,6 +315,8 @@ function renderRecommendations(data) {
 function chooseMenu(menu, selectedCard) {
     const store = readStore();
     store.today = {date: localDate(), menu};
+    upsertMeal(store, localDate(), menu);
+    store.teamMembers.forEach((member) => upsertPersonMeal(member, localDate(), menu));
     writeStore(store);
     state.selectedMenu = menu;
     document.querySelectorAll(".menu-card").forEach((card) => card.classList.remove("selected"));
@@ -204,8 +337,10 @@ function renderTimeline() {
         const clear = makeButton("선택 취소", "text-button", () => {
             const next = readStore();
             next.today = null;
+            upsertMeal(next, localDate(), "");
+            next.teamMembers.forEach((member) => upsertPersonMeal(member, localDate(), ""));
             writeStore(next);
-            renderTimeline();
+            syncInputsFromStore();
         });
         today.append(label, strong, clear);
         today.classList.remove("empty");
@@ -216,148 +351,77 @@ function renderTimeline() {
 
     const timeline = $("timeline");
     timeline.replaceChildren();
-    const recent = store.meals.slice(0, 12);
-    if (!recent.length) {
-        const empty = document.createElement("p");
-        empty.className = "empty-state";
-        empty.textContent = "최근 식사를 입력하면 날짜별 기록이 여기에 쌓여요.";
-        timeline.append(empty);
-        return;
-    }
-    recent.forEach((item) => {
-        const row = document.createElement("article");
-        row.className = "timeline-row";
-        const date = document.createElement("time");
-        date.dateTime = item.date;
-        date.textContent = formatDate(item.date);
-        const input = document.createElement("input");
-        input.value = item.menu;
-        input.maxLength = 120;
-        input.setAttribute("aria-label", `${formatDate(item.date)} 메뉴`);
-        const save = makeButton("저장", "small-button", () => {
-            const next = readStore();
-            upsertMeal(next, item.date, input.value.trim());
-            writeStore(next);
-            syncInputsFromStore();
-            showToast("식사 기록을 수정했어요.");
-        });
-        const remove = makeButton("삭제", "small-button ghost", () => {
-            const next = readStore();
-            upsertMeal(next, item.date, "");
-            writeStore(next);
-            syncInputsFromStore();
-            showToast("식사 기록을 삭제했어요.");
-        });
-        row.append(date, input, save, remove);
-        timeline.append(row);
-    });
-}
+    const people = [
+        {id: "self", name: "나", meals: store.meals, self: true},
+        ...store.teamMembers.map((member) => ({...member, self: false})),
+    ];
+    people.forEach((person) => {
+        const card = document.createElement("section");
+        card.className = "person-timeline";
+        const heading = document.createElement("div");
+        heading.className = "person-timeline-heading";
+        const name = document.createElement("h3");
+        name.textContent = person.name;
+        const count = document.createElement("span");
+        count.textContent = `${person.meals.length}일 기록`;
+        heading.append(name, count);
+        card.append(heading);
 
-async function applyAddress() {
-    const address = $("address").value.trim();
-    if (!address) return showToast("주소를 입력해 주세요.");
-    $("locationStatus").textContent = "주소를 확인하고 있어요…";
-    try {
-        const data = await apiFetch(`/api/geocode?address=${encodeURIComponent(address)}`);
-        state.x = Number(data.x);
-        state.y = Number(data.y);
-        localStorage.setItem("lunchAddress", address);
-        $("locationStatus").textContent = `✓ ${data.address_name}`;
-        showToast("검색 위치를 설정했어요.");
-    } catch (error) {
-        $("locationStatus").textContent = "주소 설정 실패";
-        showToast(error.message);
-    }
-}
-
-function useCurrentLocation() {
-    if (!navigator.geolocation) return showToast("이 브라우저는 현재 위치를 지원하지 않아요.");
-    $("locationStatus").textContent = "현재 위치를 확인하고 있어요…";
-    navigator.geolocation.getCurrentPosition(
-        ({coords}) => {
-            state.x = coords.longitude;
-            state.y = coords.latitude;
-            $("locationStatus").textContent = "✓ 현재 위치가 적용됐어요.";
-            showToast("검색 위치를 설정했어요.");
-        },
-        () => {
-            $("locationStatus").textContent = "현재 위치 사용 실패";
-            showToast("브라우저 위치 권한을 허용한 뒤 다시 시도해 주세요.");
-        },
-        {enableHighAccuracy: true, timeout: 9000, maximumAge: 300000}
-    );
-}
-
-async function findRestaurants(menu) {
-    if (state.x === null && $("address").value.trim()) await applyAddress();
-    if (state.x === null || state.y === null) return showToast("먼저 주소 또는 현재 위치를 설정해 주세요.");
-    const radius = Number($("radius").value);
-    $("restaurantSection").classList.remove("hidden");
-    $("restaurantTitle").textContent = `${menu} 먹으러 어디로 갈까요?`;
-    $("restaurants").innerHTML = '<p class="loading">가까운 식당을 찾고 있어요…</p>';
-    $("restaurantSection").scrollIntoView({behavior: "smooth", block: "start"});
-    try {
-        const params = new URLSearchParams({query: menu, x: state.x, y: state.y, radius});
-        const data = await apiFetch(`/api/restaurants?${params}`);
-        renderRestaurants(data);
-    } catch (error) {
-        const message = document.createElement("p");
-        message.className = "empty-state";
-        message.textContent = error.message;
-        $("restaurants").replaceChildren(message);
-        showToast(error.message);
-    }
-}
-
-function renderRestaurants(data) {
-    const container = $("restaurants");
-    container.replaceChildren();
-    if (!data.restaurants.length) {
-        const empty = document.createElement("p");
-        empty.className = "empty-state";
-        empty.textContent = data.suggestion;
-        container.append(empty);
-        return;
-    }
-    data.restaurants.forEach((item) => {
-        const article = document.createElement("article");
-        article.className = "restaurant-item";
-        const info = document.createElement("div");
-        const title = document.createElement("h3");
-        title.textContent = item.name;
-        const category = document.createElement("p");
-        category.textContent = item.category;
-        const address = document.createElement("p");
-        address.textContent = item.address;
-        info.append(title, category, address);
-        if (item.phone) {
-            const phone = document.createElement("p");
-            phone.textContent = item.phone;
-            info.append(phone);
+        const recent = person.meals.slice(0, 12);
+        if (!recent.length) {
+            const empty = document.createElement("p");
+            empty.className = "person-empty";
+            empty.textContent = "아직 저장된 식사가 없어요.";
+            card.append(empty);
         }
-        if (item.place_url) {
-            const link = document.createElement("a");
-            link.href = item.place_url;
-            link.target = "_blank";
-            link.rel = "noopener noreferrer";
-            link.textContent = "카카오맵 상세페이지 ↗";
-            info.append(link);
-        }
-        const distance = document.createElement("strong");
-        distance.className = "distance";
-        distance.textContent = item.distance_m < 1000 ? `${item.distance_m}m` : `${(item.distance_m / 1000).toFixed(1)}km`;
-        article.append(info, distance);
-        container.append(article);
+        recent.forEach((item) => {
+            const row = document.createElement("article");
+            row.className = "timeline-row";
+            const date = document.createElement("time");
+            date.dateTime = item.date;
+            date.textContent = formatDate(item.date);
+            const input = document.createElement("input");
+            input.value = item.menu;
+            input.maxLength = 120;
+            input.setAttribute("aria-label", `${person.name}의 ${formatDate(item.date)} 메뉴`);
+            const update = (menu) => {
+                const next = readStore();
+                if (person.self) {
+                    upsertMeal(next, item.date, menu);
+                } else {
+                    const member = next.teamMembers.find((entry) => entry.id === person.id);
+                    if (member) upsertPersonMeal(member, item.date, menu);
+                }
+                writeStore(next);
+                syncInputsFromStore();
+            };
+            const save = makeButton("저장", "small-button", () => {
+                update(input.value.trim());
+                showToast(`${person.name}의 식사 기록을 수정했어요.`);
+            });
+            const remove = makeButton("삭제", "small-button ghost", () => {
+                update("");
+                showToast(`${person.name}의 식사 기록을 삭제했어요.`);
+            });
+            row.append(date, input, save, remove);
+            card.append(row);
+        });
+        timeline.append(card);
     });
 }
 
 function clearHistory() {
-    if (!window.confirm("오늘 선택과 모든 식사 기록을 삭제할까요?")) return;
+    if (!window.confirm("팀원 목록과 사람별 식사 기록을 모두 삭제할까요?")) return;
     localStorage.removeItem(STORAGE_KEY);
     migrateAndRollOver();
     syncInputsFromStore();
-    showToast("모든 식사 기록을 삭제했어요.");
+    showToast("모든 사람의 식사 기록을 삭제했어요.");
 }
+
+/*
+ * 사람별 날짜 기록은 브라우저에만 보관합니다.
+ * 추천 요청에는 최근 3일치만 전송되고 서버에는 저장되지 않습니다.
+ */
 
 $("recommendBtn").addEventListener("click", () => {
     state.retryCount = 0;
@@ -367,12 +431,8 @@ $("relaxBtn").addEventListener("click", () => {
     state.retryCount += 1;
     getRecommendations("relaxed");
 });
-$("useAddressBtn").addEventListener("click", applyAddress);
-$("useLocationBtn").addEventListener("click", useCurrentLocation);
+$("addMemberBtn").addEventListener("click", addTeamMember);
 $("clearHistoryBtn").addEventListener("click", clearHistory);
-$("address").addEventListener("keydown", (event) => {
-    if (event.key === "Enter") applyAddress();
-});
 ["yesterday", "twoDaysAgo", "threeDaysAgo"].forEach((id) => {
     $(id).addEventListener("change", saveRecentInputs);
 });

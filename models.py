@@ -5,6 +5,20 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
+class TeamMemberMeals(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    name: str = Field(min_length=1, max_length=20)
+    yesterday: str = Field(default="", max_length=120)
+    two_days_ago: str = Field(default="", max_length=120)
+    three_days_ago: str = Field(default="", max_length=120)
+
+    @field_validator("name", "yesterday", "two_days_ago", "three_days_ago")
+    @classmethod
+    def normalize_text(cls, value: str) -> str:
+        return " ".join(value.strip().split())
+
+
 class RecommendRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -16,6 +30,7 @@ class RecommendRequest(BaseModel):
     prefer_soup: bool = False
     prefer_light: bool = False
     retry_count: int = Field(default=0, ge=0, le=20)
+    team_members: list[TeamMemberMeals] = Field(default_factory=list, max_length=9)
 
     @field_validator("yesterday", "two_days_ago", "three_days_ago")
     @classmethod
@@ -28,7 +43,6 @@ class RecommendationItem(BaseModel):
     cuisine: str
     kind: str
     reason: str
-    search_query: str
     similarity: float = Field(ge=0, le=1)
 
 
@@ -37,6 +51,7 @@ class RecommendResponse(BaseModel):
     engine: Literal["ai", "local"]
     engine_label: str
     relax_level: int
+    participant_count: int = Field(ge=1, le=10)
     recommendations: list[RecommendationItem] = Field(min_length=3, max_length=3)
 
 
@@ -59,20 +74,3 @@ class AIAssessmentResponse(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     assessments: list[AIAssessment] = Field(min_length=1, max_length=20)
-
-
-class RestaurantItem(BaseModel):
-    name: str
-    category: str
-    address: str
-    phone: str
-    distance_m: int = Field(ge=0)
-    place_url: str
-
-
-class RestaurantSearchResponse(BaseModel):
-    query: str
-    count: int = Field(ge=0)
-    radius: int
-    restaurants: list[RestaurantItem]
-    suggestion: str | None = None

@@ -17,6 +17,15 @@ def test_health_endpoint():
     response = client.get("/health")
     assert response.status_code == 200
     assert response.json()["status"] == "ok"
+    assert "kakao_api_configured" not in response.json()
+
+
+def test_removed_restaurant_endpoints_are_not_exposed():
+    assert client.get("/api/geocode", params={"address": "서울시청"}).status_code == 404
+    assert client.get(
+        "/api/restaurants",
+        params={"query": "돈가스", "x": 126.97, "y": 37.56},
+    ).status_code == 404
 
 
 def test_recommend_endpoint_validates_and_returns_three_items():
@@ -36,4 +45,40 @@ def test_recommend_endpoint_validates_and_returns_three_items():
 
 def test_invalid_extra_input_is_rejected():
     response = client.post("/api/recommend", json={"unknown": "value"})
+    assert response.status_code == 422
+
+
+def test_team_members_are_accepted_and_counted():
+    response = client.post(
+        "/api/recommend",
+        json={
+            "yesterday": "돈가스",
+            "team_members": [
+                {
+                    "name": "동료 1",
+                    "yesterday": "햄버거",
+                    "two_days_ago": "부리또",
+                    "three_days_ago": "초밥",
+                }
+            ],
+        },
+    )
+    assert response.status_code == 200
+    assert response.json()["participant_count"] == 2
+    assert all(
+        item["menu"] not in {"돈가스", "햄버거"}
+        for item in response.json()["recommendations"]
+    )
+
+
+def test_team_member_limit_is_validated():
+    response = client.post(
+        "/api/recommend",
+        json={
+            "team_members": [
+                {"name": f"동료 {index}"}
+                for index in range(10)
+            ]
+        },
+    )
     assert response.status_code == 422

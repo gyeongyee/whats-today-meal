@@ -1,7 +1,7 @@
 import asyncio
 
 from ai_service import AISemanticService, AISettings
-from models import RecommendRequest
+from models import RecommendRequest, TeamMemberMeals
 from recommendation_engine import RecommendationEngine
 
 
@@ -70,3 +70,34 @@ def test_new_diverse_menus_include_burrito():
     from menu_data import MENU_CATALOG
 
     assert "부리또" in {menu["name"] for menu in MENU_CATALOG}
+
+
+def test_team_recommendation_excludes_everyones_yesterday_meals():
+    result = asyncio.run(
+        make_engine().recommend(
+            RecommendRequest(
+                yesterday="돈가스",
+                two_days_ago="김치찌개",
+                three_days_ago="짜장면",
+                mode="relaxed",
+                team_members=[
+                    TeamMemberMeals(
+                        name="민지",
+                        yesterday="햄버거, 부리또",
+                        two_days_ago="초밥",
+                        three_days_ago="쌀국수",
+                    ),
+                    TeamMemberMeals(
+                        name="현우",
+                        yesterday="제육볶음",
+                        two_days_ago="파스타",
+                        three_days_ago="샐러드",
+                    ),
+                ],
+            )
+        )
+    )
+    names = {item.menu for item in result.recommendations}
+    assert not names & {"돈가스", "햄버거", "부리또", "제육볶음"}
+    assert result.participant_count == 3
+    assert all("3명" in item.reason for item in result.recommendations)
