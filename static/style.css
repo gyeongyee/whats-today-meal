@@ -106,6 +106,7 @@ input, select {
 }
 input:focus, select:focus { border-color: var(--orange); box-shadow: 0 0 0 4px rgba(255,92,53,.1); }
 .preference-block { margin-top: 40px; }
+.preference-label { margin: 0 0 10px; color: var(--muted); font-size: 12px; font-weight: 800; }
 .preferences { display: flex; gap: 10px; flex-wrap: wrap; }
 .preference input { position: absolute; opacity: 0; pointer-events: none; }
 .preference span {
@@ -113,6 +114,16 @@ input:focus, select:focus { border-color: var(--orange); box-shadow: 0 0 0 4px r
     padding: 12px 15px; border-radius: 13px; cursor: pointer; transition: .15s; color: var(--ink);
 }
 .preference input:checked + span { color: var(--orange-dark); border-color: var(--orange); background: #fff2ec; box-shadow: 0 0 0 2px rgba(255,92,53,.08); }
+.preference-groups { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 22px; }
+.filter-group { min-width: 0; margin: 0; padding: 16px; border: 1px solid var(--line); border-radius: 17px; background: #fffaf5; }
+.filter-group legend { padding: 0 7px; font-size: 13px; font-weight: 900; }
+.filter-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.filter-chips input { position: absolute; opacity: 0; pointer-events: none; }
+.filter-chips span {
+    display: block; margin: 0; padding: 9px 11px; border: 1px solid var(--line);
+    border-radius: 11px; background: white; cursor: pointer; color: #5f5852; font-size: 12px; font-weight: 700;
+}
+.filter-chips input:checked + span { border-color: var(--green); color: var(--green); background: #eaf3e8; box-shadow: 0 0 0 2px rgba(62,115,82,.08); }
 .primary-button {
     width: 100%; margin-top: 34px; border: 0; border-radius: 16px; padding: 18px 22px;
     display: flex; justify-content: center; gap: 15px; background: var(--orange); color: white;
@@ -128,15 +139,36 @@ input:focus, select:focus { border-color: var(--orange); box-shadow: 0 0 0 4px r
 .results-section .results-heading p { color: #bdb4ac; }
 .engine-badge { align-self: flex-start; background: #49413b; color: #ffe4b3; border: 1px solid #655a51; padding: 9px 12px; border-radius: 99px; font-size: 12px; white-space: nowrap; }
 .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-.menu-card { background: #fffdf9; color: var(--ink); border: 2px solid transparent; border-radius: 22px; padding: 24px; min-height: 330px; display: flex; flex-direction: column; transition: transform .15s, border-color .15s; }
+.menu-card { background: #fffdf9; color: var(--ink); border: 2px solid transparent; border-radius: 22px; padding: 20px; min-height: 530px; display: flex; flex-direction: column; transition: transform .15s, border-color .15s; }
 .menu-card:hover { transform: translateY(-3px); }
 .menu-card.selected { border-color: var(--yellow); box-shadow: 0 0 0 4px rgba(255,216,90,.2); }
 .menu-card-top { display: flex; justify-content: space-between; align-items: center; }
 .menu-number { font-family: "Gowun Dodum", sans-serif; color: var(--orange); font-size: 26px; font-weight: 900; }
 .match { color: var(--green); background: #eaf3e8; border-radius: 99px; padding: 6px 9px; font-size: 11px; font-weight: 800; }
-.menu-card h3 { margin: 20px 0 5px; font-size: 27px; letter-spacing: -.04em; }
+.menu-visual { position: relative; height: 150px; margin: 15px 0 17px; border-radius: 16px; overflow: hidden; background: #eee3d6; }
+.menu-visual img { width: 100%; height: 100%; object-fit: cover; opacity: .56; filter: saturate(.8); transition: opacity .2s, filter .2s; }
+.menu-visual.has-photo img { opacity: 1; filter: none; }
+.menu-visual > span {
+    position: absolute; inset: 0; display: grid; place-items: center;
+    font-size: 58px; filter: drop-shadow(0 5px 9px rgba(0,0,0,.24)); transition: opacity .2s;
+}
+.menu-visual.has-photo > span { opacity: 0; }
+.image-source {
+    position: absolute; right: 8px; bottom: 8px; padding: 4px 7px; border-radius: 99px;
+    color: white; background: rgba(0,0,0,.56); text-decoration: none; font-size: 9px;
+}
+.visual-soup img { object-position: 70% 8%; }
+.visual-noodle img { object-position: 80% 5%; }
+.visual-wrap img { object-position: 5% 45%; }
+.visual-light img { object-position: 96% 30%; }
+.visual-grill img { object-position: 88% 88%; }
+.visual-rice img { object-position: 5% 5%; }
+.menu-card h3 { margin: 0 0 5px; font-size: 27px; letter-spacing: -.04em; }
 .menu-meta { margin: 0; color: var(--muted); font-size: 12px; }
-.menu-reason { flex: 1; margin: 21px 0; color: #5e5650; line-height: 1.7; font-size: 14px; }
+.menu-description { margin: 14px 0 8px; color: #5e5650; line-height: 1.55; font-size: 13px; }
+.menu-calories { align-self: flex-start; margin: 0; padding: 6px 9px; color: var(--orange-dark); border-radius: 99px; background: #fff0e9; font-size: 11px; font-weight: 900; }
+.menu-reason { flex: 1; margin: 14px 0 18px; padding-top: 13px; color: #5e5650; border-top: 1px solid var(--line); line-height: 1.65; font-size: 13px; }
+.calorie-note { margin: 16px 0 0; color: #aca198; text-align: center; font-size: 10px; }
 .card-actions { display: grid; grid-template-columns: 1fr; gap: 7px; }
 .card-actions button, .small-button { border: 0; border-radius: 11px; padding: 11px 9px; cursor: pointer; font-weight: 800; font-size: 13px; }
 .choose-button { background: var(--ink); color: white; }
@@ -173,6 +205,17 @@ input:focus, select:focus { border-color: var(--orange); box-shadow: 0 0 0 4px r
 .story-grid p { margin: 0; color: var(--muted); line-height: 1.7; font-size: 13px; }
 .flow { display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 28px; padding: 19px; border-radius: 17px; background: var(--ink); color: white; font-size: 13px; font-weight: 700; }
 .flow b { color: var(--yellow); }
+.catalog-section { padding-block: 90px; background: #fffaf1; }
+.catalog-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 30px; }
+.catalog-heading h2 { margin: 0; font-size: clamp(28px, 4vw, 42px); letter-spacing: -.05em; }
+.catalog-heading p:not(.eyebrow) { margin: 9px 0 0; color: var(--muted); font-size: 13px; }
+.catalog-heading > span { flex: 0 0 auto; padding: 9px 12px; border-radius: 99px; color: var(--green); background: #eaf3e8; font-size: 11px; font-weight: 900; }
+.catalog-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.catalog-group { padding: 17px; border: 1px solid var(--line); border-radius: 17px; background: rgba(255,255,255,.74); }
+.catalog-group h3 { margin: 0 0 11px; font-size: 15px; }
+.catalog-group h3 small { color: var(--orange-dark); font-size: 10px; }
+.catalog-group p { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; }
+.catalog-group p span { padding: 6px 8px; border-radius: 9px; color: #655d57; background: #f3ede6; font-size: 10px; }
 footer { padding-block: 42px; background: #201c19; color: #d1c9c2; }
 footer strong { color: white; }
 footer p { margin: 8px 0 0; font-size: 11px; line-height: 1.6; }
@@ -181,9 +224,10 @@ footer p { margin: 8px 0 0; font-size: 11px; line-height: 1.6; }
 @media (max-width: 820px) {
     .hero { min-height: 0; grid-template-columns: 1fr; padding-block: 55px 70px; }
     .hero-visual { display: none; }
-    .history-grid, .card-grid, .member-meals { grid-template-columns: 1fr; }
+    .history-grid, .card-grid, .member-meals, .preference-groups { grid-template-columns: 1fr; }
     .menu-card { min-height: 0; }
     .story-grid { grid-template-columns: 1fr 1fr; }
+    .catalog-groups { grid-template-columns: repeat(2, 1fr); }
     .timeline { grid-template-columns: 1fr; }
     .results-heading { align-items: flex-start; flex-direction: column; }
 }
@@ -202,6 +246,8 @@ footer p { margin: 8px 0 0; font-size: 11px; line-height: 1.6; }
     .results-section { padding-block: 60px; }
     .timeline-section { padding-block: 65px; }
     .story-grid { grid-template-columns: 1fr; }
+    .catalog-heading { align-items: flex-start; flex-direction: column; }
+    .catalog-groups { grid-template-columns: 1fr; }
     .timeline-row { grid-template-columns: 1fr auto auto; }
     .timeline-row time { grid-column: 1 / -1; }
     .section-title-row { flex-direction: column; }

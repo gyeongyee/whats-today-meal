@@ -6,7 +6,7 @@
     <meta name="description" content="회사 동료들의 최근 3일 식사를 분석해 모두에게 새로운 점심 메뉴를 추천합니다.">
     <meta name="theme-color" content="#ff5c35">
     <title>오늘 뭐 먹지 AI — 점심 고민을 30초 만에</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=3">
 </head>
 <body>
 <header class="site-header">
@@ -66,12 +66,60 @@
         <div class="preference-block">
             <div class="step-heading compact">
                 <span class="step-number">02</span>
-                <div><h2>오늘의 기분을 알려주세요</h2><p>복수 선택할 수 있어요.</p></div>
+                <div><h2>오늘의 기분과 메뉴 틀을 골라주세요</h2><p>원하는 만큼 고르면 AI가 구체적인 메뉴로 좁혀드려요.</p></div>
             </div>
+            <p class="preference-label">오늘의 기분</p>
             <div class="preferences">
                 <label class="preference"><input id="avoidSpicy" type="checkbox"><span>🌶️ 매운 음식 제외</span></label>
                 <label class="preference"><input id="preferSoup" type="checkbox"><span>🥣 따뜻한 국물</span></label>
                 <label class="preference"><input id="preferLight" type="checkbox"><span>🥬 가볍고 산뜻하게</span></label>
+                <label class="preference"><input id="preferHearty" type="checkbox"><span>💪 든든하게</span></label>
+                <label class="preference"><input id="preferQuick" type="checkbox"><span>⏱️ 빠르고 간편하게</span></label>
+                <label class="preference"><input id="preferShare" type="checkbox"><span>🙌 함께 나눠먹기</span></label>
+            </div>
+
+            <div class="preference-groups">
+                <fieldset class="filter-group">
+                    <legend>어떤 나라 음식?</legend>
+                    <div class="filter-chips">
+                        <label><input class="cuisine-filter" type="checkbox" value="한식"><span>🇰🇷 한식</span></label>
+                        <label><input class="cuisine-filter" type="checkbox" value="일식"><span>🇯🇵 일식</span></label>
+                        <label><input class="cuisine-filter" type="checkbox" value="중식"><span>🥟 중식</span></label>
+                        <label><input class="cuisine-filter" type="checkbox" value="양식"><span>🍝 양식</span></label>
+                        <label><input class="cuisine-filter" type="checkbox" value="세계"><span>🌏 세계 음식</span></label>
+                    </div>
+                </fieldset>
+                <fieldset class="filter-group">
+                    <legend>어떤 형태?</legend>
+                    <div class="filter-chips">
+                        <label><input class="tag-filter" type="checkbox" value="밥"><span>🍚 밥</span></label>
+                        <label><input class="tag-filter" type="checkbox" value="면"><span>🍜 면</span></label>
+                        <label><input class="tag-filter" type="checkbox" value="국물"><span>🍲 국물·탕</span></label>
+                        <label><input class="tag-filter" type="checkbox" value="빵"><span>🥪 빵</span></label>
+                        <label><input class="tag-filter" type="checkbox" value="또르띠야"><span>🌯 랩·또르띠야</span></label>
+                    </div>
+                </fieldset>
+                <fieldset class="filter-group">
+                    <legend>당기는 주재료?</legend>
+                    <div class="filter-chips">
+                        <label><input class="tag-filter" type="checkbox" value="소고기"><span>🥩 소고기</span></label>
+                        <label><input class="tag-filter" type="checkbox" value="돼지고기"><span>🥓 돼지고기</span></label>
+                        <label><input class="tag-filter" type="checkbox" value="닭고기"><span>🍗 닭고기</span></label>
+                        <label><input class="tag-filter" type="checkbox" value="해산물"><span>🐟 해산물</span></label>
+                        <label><input class="tag-filter" type="checkbox" value="채소"><span>🥦 채소</span></label>
+                        <label><input class="tag-filter" type="checkbox" value="두부"><span>◻️ 두부·콩</span></label>
+                    </div>
+                </fieldset>
+                <fieldset class="filter-group">
+                    <legend>어떤 맛과 조리법?</legend>
+                    <div class="filter-chips">
+                        <label><input class="tag-filter" type="checkbox" value="매운맛"><span>🔥 매콤한 맛</span></label>
+                        <label><input class="tag-filter" type="checkbox" value="구이"><span>♨️ 구이·불향</span></label>
+                        <label><input class="tag-filter" type="checkbox" value="튀김"><span>✨ 바삭한 튀김</span></label>
+                        <label><input class="tag-filter" type="checkbox" value="향신료"><span>🌿 향신료 풍미</span></label>
+                        <label><input class="tag-filter" type="checkbox" value="가벼움"><span>🍃 담백하고 가볍게</span></label>
+                    </div>
+                </fieldset>
             </div>
         </div>
 
@@ -92,6 +140,7 @@
                 <span id="engineBadge" class="engine-badge"></span>
             </div>
             <div id="recommendations" class="card-grid"></div>
+            <p class="calorie-note">열량은 일반적인 1인분 기준 추정 범위이며 재료와 조리법에 따라 달라질 수 있어요.</p>
             <button id="relaxBtn" class="relax-button" type="button">마음에 안 들어요 · 조건 완화해서 다시 추천</button>
         </div>
     </section>
@@ -121,6 +170,27 @@
             <div class="flow"><span>팀 최근 식사 입력</span><b>→</b><span>의미 유사도 분석</span><b>→</b><span>3가지 추천</span><b>→</b><span>사람별 저장</span></div>
         </div>
     </section>
+
+    <section class="catalog-section">
+        <div class="shell">
+            <div class="catalog-heading">
+                <div>
+                    <p class="eyebrow">ALL MENU CANDIDATES</p>
+                    <h2>지금 만날 수 있는 {{ menu_count }}가지 메뉴</h2>
+                    <p>아래 모든 메뉴가 최근 식사와 오늘의 조건을 비교하는 추천 후보예요.</p>
+                </div>
+                <span>점진적으로 메뉴 추가 예정</span>
+            </div>
+            <div class="catalog-groups">
+                {% for cuisine, menus in menu_groups.items() %}
+                <article class="catalog-group">
+                    <h3>{{ cuisine }} <small>{{ menus | length }}</small></h3>
+                    <p>{% for menu in menus %}<span>{{ menu }}</span>{% endfor %}</p>
+                </article>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
 </main>
 
 <footer>
@@ -134,6 +204,6 @@
 <script>
     window.APP_CONFIG = {{ {"aiConfigured": ai_configured} | tojson }};
 </script>
-<script src="{{ url_for('static', path='/app.js') }}" defer></script>
+<script src="{{ url_for('static', path='/app.js') }}?v=3" defer></script>
 </body>
 </html>

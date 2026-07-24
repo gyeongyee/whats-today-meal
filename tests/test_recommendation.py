@@ -70,6 +70,7 @@ def test_new_diverse_menus_include_burrito():
     from menu_data import MENU_CATALOG
 
     assert "부리또" in {menu["name"] for menu in MENU_CATALOG}
+    assert len(MENU_CATALOG) >= 90
 
 
 def test_team_recommendation_excludes_everyones_yesterday_meals():
@@ -101,3 +102,25 @@ def test_team_recommendation_excludes_everyones_yesterday_meals():
     assert not names & {"돈가스", "햄버거", "부리또", "제육볶음"}
     assert result.participant_count == 3
     assert all("3명" in item.reason for item in result.recommendations)
+
+
+def test_detailed_preferences_narrow_results_and_add_menu_details():
+    from menu_data import MENU_CATALOG
+
+    result = asyncio.run(
+        make_engine().recommend(
+            RecommendRequest(
+                preferred_cuisines=["세계"],
+                preferred_tags=["닭고기", "향신료"],
+                prefer_hearty=True,
+            )
+        )
+    )
+    by_name = {menu["name"]: menu for menu in MENU_CATALOG}
+    matches = [
+        item for item in result.recommendations
+        if set(by_name[item.menu]["tags"]) & {"닭고기", "향신료"}
+    ]
+    assert len(matches) >= 2
+    assert all(item.description for item in result.recommendations)
+    assert all(item.calorie_min < item.calorie_max for item in result.recommendations)

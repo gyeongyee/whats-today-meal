@@ -214,6 +214,95 @@ function showToast(message) {
     state.toastTimer = setTimeout(() => toast.classList.add("hidden"), 2800);
 }
 
+function checkedValues(selector) {
+    return [...document.querySelectorAll(`${selector}:checked`)].map((input) => input.value);
+}
+
+const SPECIAL_IMAGE_SEARCH = {
+    "라면": "Korean ramyeon noodle soup bowl",
+    "쌀국수": "Vietnamese pho noodle soup bowl",
+};
+
+async function findExactMenuImage(menu) {
+    const cacheKey = `menuImage:${menu}`;
+    const cached = sessionStorage.getItem(cacheKey);
+    if (cached) return JSON.parse(cached);
+
+    if (SPECIAL_IMAGE_SEARCH[menu]) {
+        const commonsParams = new URLSearchParams({
+            action: "query",
+            generator: "search",
+            gsrsearch: SPECIAL_IMAGE_SEARCH[menu],
+            gsrnamespace: "6",
+            gsrlimit: "1",
+            prop: "imageinfo",
+            iiprop: "url",
+            iiurlwidth: "800",
+            format: "json",
+            origin: "*",
+        });
+        try {
+            const commons = await fetch(`https://commons.wikimedia.org/w/api.php?${commonsParams}`)
+                .then((response) => response.ok ? response.json() : null);
+            const filePage = Object.values(commons?.query?.pages || {})[0];
+            const imageInfo = filePage?.imageinfo?.[0];
+            if (imageInfo?.thumburl || imageInfo?.url) {
+                const result = {
+                    src: imageInfo.thumburl || imageInfo.url,
+                    page: imageInfo.descriptionurl || "",
+                };
+                sessionStorage.setItem(cacheKey, JSON.stringify(result));
+                return result;
+            }
+        } catch (_) { /* 정확한 문서 대표 이미지로 전환 */ }
+    }
+
+    const exactUrl = `https://ko.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(menu)}`;
+    try {
+        const exact = await fetch(exactUrl).then((response) => response.ok ? response.json() : null);
+        if (exact?.thumbnail?.source) {
+            const result = {src: exact.thumbnail.source, page: exact.content_urls?.desktop?.page || ""};
+            sessionStorage.setItem(cacheKey, JSON.stringify(result));
+            return result;
+        }
+    } catch (_) { /* 검색 API로 한 번 더 시도 */ }
+
+    const params = new URLSearchParams({
+        action: "query",
+        generator: "search",
+        gsrsearch: `${menu} 음식`,
+        gsrlimit: "1",
+        prop: "pageimages|info",
+        piprop: "thumbnail",
+        pithumbsize: "800",
+        inprop: "url",
+        format: "json",
+        origin: "*",
+    });
+    try {
+        const searched = await fetch(`https://ko.wikipedia.org/w/api.php?${params}`)
+            .then((response) => response.ok ? response.json() : null);
+        const page = Object.values(searched?.query?.pages || {})[0];
+        if (page?.thumbnail?.source) {
+            const result = {src: page.thumbnail.source, page: page.fullurl || ""};
+            sessionStorage.setItem(cacheKey, JSON.stringify(result));
+            return result;
+        }
+    } catch (_) { /* 생성한 기본 이미지 유지 */ }
+    return null;
+}
+
+async function applyExactMenuImage(menu, visual, image, sourceLink) {
+    const result = await findExactMenuImage(menu);
+    if (!result) return;
+    image.addEventListener("load", () => visual.classList.add("has-photo"), {once: true});
+    image.src = result.src;
+    if (result.page) {
+        sourceLink.href = result.page;
+        sourceLink.classList.remove("hidden");
+    }
+}
+
 async function apiFetch(url, options) {
     const response = await fetch(url, options);
     let data;
@@ -243,6 +332,11 @@ async function getRecommendations(mode = "strict") {
         avoid_spicy: $("avoidSpicy").checked,
         prefer_soup: $("preferSoup").checked,
         prefer_light: $("preferLight").checked,
+        prefer_hearty: $("preferHearty").checked,
+        prefer_quick: $("preferQuick").checked,
+        prefer_share: $("preferShare").checked,
+        preferred_cuisines: checkedValues(".cuisine-filter"),
+        preferred_tags: checkedValues(".tag-filter"),
         retry_count: state.retryCount,
         team_members: teamMembers,
     };
@@ -297,16 +391,39 @@ function renderRecommendations(data) {
         top.append(number, match);
         const title = document.createElement("h3");
         title.textContent = item.menu;
+        const visual = document.createElement("div");
+        visual.className = `menu-visual visual-${item.visual_key}`;
+        visual.setAttribute("role", "img");
+        visual.setAttribute("aria-label", `${item.menu} 음식 이미지`);
+        const image = document.createElement("img");
+        image.src = "/static/images/food-card-bg.webp";
+        image.alt = "";
+        const emoji = document.createElement("span");
+        emoji.textContent = item.emoji;
+        const sourceLink = document.createElement("a");
+        sourceLink.className = "image-source hidden";
+        sourceLink.target = "_blank";
+        sourceLink.rel = "noopener noreferrer";
+        sourceLink.textContent = "사진 출처";
+        sourceLink.setAttribute("aria-label", `${item.menu} 사진 출처 보기`);
+        visual.append(image, emoji, sourceLink);
+        applyExactMenuImage(item.menu, visual, image, sourceLink);
         const meta = document.createElement("p");
         meta.className = "menu-meta";
         meta.textContent = `${item.cuisine} · ${item.kind}`;
+        const description = document.createElement("p");
+        description.className = "menu-description";
+        description.textContent = item.description;
+        const calories = document.createElement("p");
+        calories.className = "menu-calories";
+        calories.textContent = `예상 ${item.calorie_min.toLocaleString("ko-KR")}–${item.calorie_max.toLocaleString("ko-KR")} kcal`;
         const reason = document.createElement("p");
         reason.className = "menu-reason";
         reason.textContent = item.reason;
         const actions = document.createElement("div");
         actions.className = "card-actions";
         actions.append(makeButton("이걸로 결정", "choose-button", () => chooseMenu(item.menu, card)));
-        card.append(top, title, meta, reason, actions);
+        card.append(top, visual, title, meta, description, calories, reason, actions);
         container.append(card);
     });
     $("recommendSection").scrollIntoView({behavior: "smooth", block: "start"});

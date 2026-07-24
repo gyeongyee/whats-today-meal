@@ -28,7 +28,79 @@ class RecommendationEngine:
             score += 24 if "국물" in tags else -4
         if request.prefer_light:
             score += 26 if "가벼움" in tags else -4
+        if request.prefer_hearty:
+            score += 20 if tags & {"밥", "고기", "소고기", "돼지고기", "닭고기"} else -3
+        if request.prefer_quick:
+            score += 20 if tags & {"빠름", "간편식", "빵", "또르띠야"} else -3
+        if request.prefer_share:
+            score += 20 if "공유" in tags else -2
+        if request.preferred_tags:
+            score += min(36, 13 * len(tags & set(request.preferred_tags)))
+        if request.preferred_cuisines:
+            cuisine_groups = {
+                "한식": {"한식", "분식"},
+                "일식": {"일식"},
+                "중식": {"중식"},
+                "양식": {"양식", "경양식", "하와이안", "치킨"},
+                "세계": {
+                    "동남아", "베트남", "태국", "인도네시아", "인도",
+                    "인도·일식", "멕시칸", "중동", "스페인",
+                },
+            }
+            selected = {
+                cuisine
+                for group in request.preferred_cuisines
+                for cuisine in cuisine_groups.get(group, {group})
+            }
+            score += 24 if menu["cuisine"] in selected else -3
         return score
+
+    @staticmethod
+    def _menu_details(menu: Menu) -> tuple[str, int, int, str, str]:
+        tags = set(menu["tags"])
+        kind = menu["kind"]
+        if "국물" in tags:
+            visual_key, emoji = "soup", "🍲"
+        elif "면" in tags:
+            visual_key, emoji = "noodle", "🍜"
+        elif tags & {"빵", "또르띠야"}:
+            visual_key, emoji = "wrap", "🌯"
+        elif "채소" in tags and "가벼움" in tags:
+            visual_key, emoji = "light", "🥗"
+        elif tags & {"구이", "튀김"}:
+            visual_key, emoji = "grill", "🍗"
+        else:
+            visual_key, emoji = "rice", "🍚"
+
+        base = 520
+        if "가벼움" in tags:
+            base -= 150
+        if "튀김" in tags or "크림" in tags or "치즈" in tags:
+            base += 180
+        if tags & {"밥", "면"}:
+            base += 80
+        if tags & {"고기", "소고기", "돼지고기", "닭고기"}:
+            base += 70
+        calorie_min = max(180, base - 80)
+        calorie_max = base + 100
+
+        feature_sentences = [
+            sentence
+            for tag, sentence in (
+                ("국물", "따뜻한 국물로 속을 편안하게 채우기 좋아요."),
+                ("채소", "채소의 산뜻한 식감이 살아 있어요."),
+                ("튀김", "바삭한 식감으로 기분 좋은 포만감을 줘요."),
+                ("구이", "불향과 구운 풍미가 매력적이에요."),
+                ("매운맛", "입맛을 깨우는 매콤함이 포인트예요."),
+                ("향신료", "풍성한 향신료 향을 즐기기 좋아요."),
+                ("해산물", "해산물의 감칠맛을 담았어요."),
+                ("가벼움", "부담이 적어 산뜻하게 즐기기 좋아요."),
+            )
+            if tag in tags
+        ]
+        feature = feature_sentences[0] if feature_sentences else f"{kind} 특유의 든든한 맛을 즐기기 좋아요."
+        description = f"{menu['cuisine']} 스타일의 {kind} 메뉴예요. {feature}"
+        return description, calorie_min, calorie_max, visual_key, emoji
 
     @staticmethod
     def _stable_variety(menu: Menu, request: RecommendRequest) -> float:
@@ -149,6 +221,13 @@ class RecommendationEngine:
             selected = reranked[:3]
 
         engine = "ai" if ai_results else "local"
+        preference_active = bool(
+            request.preferred_cuisines
+            or request.preferred_tags
+            or request.prefer_hearty
+            or request.prefer_quick
+            or request.prefer_share
+        )
         return RecommendResponse(
             mode=request.mode,
             engine=engine,
@@ -160,7 +239,16 @@ class RecommendationEngine:
                     menu=menu["name"],
                     cuisine=menu["cuisine"],
                     kind=menu["kind"],
-                    reason=reason,
+                    reason=(
+                        f"선택한 음식 취향을 반영했어요. {reason}"
+                        if preference_active and not reason.startswith("선택한")
+                        else reason
+                    ),
+                    description=self._menu_details(menu)[0],
+                    calorie_min=self._menu_details(menu)[1],
+                    calorie_max=self._menu_details(menu)[2],
+                    visual_key=self._menu_details(menu)[3],
+                    emoji=self._menu_details(menu)[4],
                     similarity=round(max(similarities), 2),
                 )
                 for _, menu, similarities, reason in selected

@@ -29,6 +29,11 @@ class RecommendRequest(BaseModel):
     avoid_spicy: bool = False
     prefer_soup: bool = False
     prefer_light: bool = False
+    prefer_hearty: bool = False
+    prefer_quick: bool = False
+    prefer_share: bool = False
+    preferred_cuisines: list[str] = Field(default_factory=list, max_length=5)
+    preferred_tags: list[str] = Field(default_factory=list, max_length=10)
     retry_count: int = Field(default=0, ge=0, le=20)
     team_members: list[TeamMemberMeals] = Field(default_factory=list, max_length=9)
 
@@ -43,6 +48,11 @@ class RecommendationItem(BaseModel):
     cuisine: str
     kind: str
     reason: str
+    description: str
+    calorie_min: int = Field(ge=0)
+    calorie_max: int = Field(ge=0)
+    visual_key: str
+    emoji: str
     similarity: float = Field(ge=0, le=1)
 
 

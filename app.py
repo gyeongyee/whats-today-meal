@@ -9,6 +9,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from ai_service import AISemanticService
+from menu_data import MENU_CATALOG
 from models import RecommendRequest, RecommendResponse
 from recommendation_engine import RecommendationEngine
 
@@ -27,10 +28,17 @@ ai_service = AISemanticService.from_env()
 recommendation_engine = RecommendationEngine(ai_service)
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
+    menu_groups: dict[str, list[str]] = {}
+    for menu in MENU_CATALOG:
+        menu_groups.setdefault(menu["cuisine"], []).append(menu["name"])
     return templates.TemplateResponse(
         request=request,
         name="index.html",
-        context={"ai_configured": ai_service.configured},
+        context={
+            "ai_configured": ai_service.configured,
+            "menu_groups": menu_groups,
+            "menu_count": len(MENU_CATALOG),
+        },
     )
 
 

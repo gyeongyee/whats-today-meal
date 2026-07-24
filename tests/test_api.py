@@ -9,6 +9,8 @@ def test_home_and_static_assets_are_served():
     home = client.get("/")
     assert home.status_code == 200
     assert "오늘 뭐 먹지 AI" in home.text
+    assert "지금 만날 수 있는 93가지 메뉴" in home.text
+    assert "점진적으로 메뉴 추가 예정" in home.text
     assert client.get("/static/app.js").status_code == 200
     assert client.get("/static/style.css").status_code == 200
 
@@ -40,7 +42,11 @@ def test_recommend_endpoint_validates_and_returns_three_items():
         },
     )
     assert response.status_code == 200
-    assert len(response.json()["recommendations"]) == 3
+    recommendations = response.json()["recommendations"]
+    assert len(recommendations) == 3
+    assert all(item["description"] for item in recommendations)
+    assert all(item["calorie_min"] < item["calorie_max"] for item in recommendations)
+    assert all(item["visual_key"] and item["emoji"] for item in recommendations)
 
 
 def test_invalid_extra_input_is_rejected():
