@@ -49,8 +49,6 @@ button { color: inherit; }
 .hero h1, .story-section h2 { margin: 0; font-size: clamp(44px, 6vw, 72px); line-height: 1.17; letter-spacing: -.065em; }
 em { color: var(--orange); font-style: normal; font-family: "Gowun Dodum", sans-serif; }
 .hero-copy { max-width: 630px; margin: 24px 0; color: var(--muted); line-height: 1.8; font-size: 17px; }
-.hero-tags { display: flex; flex-wrap: wrap; gap: 8px; }
-.hero-tags span { border: 1px solid var(--line); background: rgba(255,255,255,.58); padding: 8px 12px; border-radius: 99px; font-size: 12px; font-weight: 700; }
 .hero-visual { display: grid; place-items: center; }
 .plate {
     position: relative; width: min(350px, 30vw); aspect-ratio: 1;

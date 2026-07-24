@@ -6,7 +6,7 @@
     <meta name="description" content="회사 동료들의 최근 3일 식사를 분석해 모두에게 새로운 점심 메뉴를 추천합니다.">
     <meta name="theme-color" content="#ff5c35">
     <title>오늘 뭐 먹지 AI — 점심 고민을 30초 만에</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=3">
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=4">
 </head>
 <body>
 <header class="site-header">
@@ -23,9 +23,6 @@
             <p class="eyebrow">점심 고민, 이제 30초면 충분해요</p>
             <h1>어제와는 다르게,<br><em>오늘은 맛있게.</em></h1>
             <p class="hero-copy">나와 동료들이 최근 3일간 먹은 메뉴의 의미까지 비교해, 모두에게 새로운 점심 3개만 골라드려요.</p>
-            <div class="hero-tags" aria-label="서비스 특징">
-                <span>팀 식사 분석</span><span>AI 의미 유사도</span><span>사람별 타임라인</span>
-            </div>
         </div>
         <div class="hero-visual" aria-hidden="true">
             <div class="plate">
@@ -82,9 +79,9 @@
                 <fieldset class="filter-group">
                     <legend>어떤 나라 음식?</legend>
                     <div class="filter-chips">
-                        <label><input class="cuisine-filter" type="checkbox" value="한식"><span>🇰🇷 한식</span></label>
-                        <label><input class="cuisine-filter" type="checkbox" value="일식"><span>🇯🇵 일식</span></label>
-                        <label><input class="cuisine-filter" type="checkbox" value="중식"><span>🥟 중식</span></label>
+                        <label><input class="cuisine-filter" type="checkbox" value="한식"><span>🍚 한식</span></label>
+                        <label><input class="cuisine-filter" type="checkbox" value="일식"><span>🍣 일식</span></label>
+                        <label><input class="cuisine-filter" type="checkbox" value="중식"><span>🍜 중식</span></label>
                         <label><input class="cuisine-filter" type="checkbox" value="양식"><span>🍝 양식</span></label>
                         <label><input class="cuisine-filter" type="checkbox" value="세계"><span>🌏 세계 음식</span></label>
                     </div>
@@ -204,6 +201,6 @@
 <script>
     window.APP_CONFIG = {{ {"aiConfigured": ai_configured} | tojson }};
 </script>
-<script src="{{ url_for('static', path='/app.js') }}?v=3" defer></script>
+<script src="{{ url_for('static', path='/app.js') }}?v=4" defer></script>
 </body>
 </html>
