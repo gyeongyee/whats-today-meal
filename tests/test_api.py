@@ -9,7 +9,7 @@ def test_home_and_static_assets_are_served():
     home = client.get("/")
     assert home.status_code == 200
     assert "오늘 뭐 먹지 AI" in home.text
-    assert "지금 만날 수 있는 93가지 메뉴" in home.text
+    assert "지금 만날 수 있는 95가지 메뉴" in home.text
     assert "점진적으로 메뉴 추가 예정" in home.text
     assert client.get("/static/app.js").status_code == 200
     assert client.get("/static/style.css").status_code == 200

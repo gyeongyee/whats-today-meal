@@ -67,10 +67,16 @@ def test_all_of_yesterdays_multiple_meals_are_excluded():
 
 
 def test_new_diverse_menus_include_burrito():
-    from menu_data import MENU_CATALOG
+    from menu_data import ALIASES, MENU_CATALOG
 
-    assert "부리또" in {menu["name"] for menu in MENU_CATALOG}
-    assert len(MENU_CATALOG) >= 90
+    by_name = {menu["name"]: menu for menu in MENU_CATALOG}
+    assert "부리또" in by_name
+    assert len(MENU_CATALOG) == 95
+    assert by_name["카레"]["cuisine"] == "일식"
+    assert by_name["난과 커리"]["cuisine"] == "인도"
+    assert by_name["로코모코"]["cuisine"] == "하와이안"
+    assert by_name["갈릭 쉬림프"]["cuisine"] == "하와이안"
+    assert ALIASES["커리"] == "난과 커리"
 
 
 def test_team_recommendation_excludes_everyones_yesterday_meals():

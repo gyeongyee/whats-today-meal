@@ -221,6 +221,8 @@ function checkedValues(selector) {
 const SPECIAL_IMAGE_SEARCH = {
     "라면": "Korean ramyeon noodle soup bowl",
     "쌀국수": "Vietnamese pho noodle soup bowl",
+    "난과 커리": "Indian naan bread with curry meal",
+    "갈릭 쉬림프": "Hawaiian garlic shrimp plate",
 };
 
 async function findExactMenuImage(menu) {

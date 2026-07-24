@@ -6,7 +6,7 @@
     <meta name="description" content="회사 동료들의 최근 3일 식사를 분석해 모두에게 새로운 점심 메뉴를 추천합니다.">
     <meta name="theme-color" content="#ff5c35">
     <title>오늘 뭐 먹지 AI — 점심 고민을 30초 만에</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=4">
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=5">
 </head>
 <body>
 <header class="site-header">
@@ -201,6 +201,6 @@
 <script>
     window.APP_CONFIG = {{ {"aiConfigured": ai_configured} | tojson }};
 </script>
-<script src="{{ url_for('static', path='/app.js') }}?v=4" defer></script>
+<script src="{{ url_for('static', path='/app.js') }}?v=5" defer></script>
 </body>
 </html>
