@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="최근 3일 식사를 분석해 겹치지 않는 점심 메뉴와 주변 식당을 추천합니다.">
+    <meta name="theme-color" content="#ff5c35">
+    <title>오늘 뭐 먹지 AI — 점심 고민을 30초 만에</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
+</head>
+<body>
+<header class="site-header">
+    <a class="brand" href="/" aria-label="오늘 뭐 먹지 AI 홈">
+        <span class="brand-mark" aria-hidden="true">냠</span>
+        <span>오늘 뭐 먹지 AI</span>
+    </a>
+    <span class="privacy-chip">기록은 이 기기에만 저장돼요</span>
+</header>
+
+<main>
+    <section class="hero shell">
+        <div>
+            <p class="eyebrow">점심 고민, 이제 30초면 충분해요</p>
+            <h1>어제와는 다르게,<br><em>오늘은 맛있게.</em></h1>
+            <p class="hero-copy">최근 3일 메뉴의 의미까지 비교해 겹침은 줄이고, 지금 당기는 메뉴 3개만 골라드려요.</p>
+            <div class="hero-tags" aria-label="서비스 특징">
+                <span>최근 식사 분석</span><span>AI 의미 유사도</span><span>주변 식당 연결</span>
+            </div>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+            <div class="plate">
+                <span class="plate-emoji">🍱</span>
+                <span class="orbit orbit-one">🥗</span>
+                <span class="orbit orbit-two">🍜</span>
+                <span class="orbit orbit-three">🍛</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="workspace shell" aria-label="메뉴 추천 입력">
+        <div class="step-heading">
+            <span class="step-number">01</span>
+            <div><h2>최근 3일, 무엇을 드셨나요?</h2><p>비슷한 음식까지 알아보고 새로운 선택지를 찾을게요.</p></div>
+        </div>
+
+        <div class="history-grid">
+            <label><span id="yesterdayLabel">어제 먹은 메뉴</span><input id="yesterday" maxlength="120" autocomplete="off" placeholder="예: 돈가스, 햄버거"></label>
+            <label><span id="twoDaysAgoLabel">2일 전 먹은 메뉴</span><input id="twoDaysAgo" maxlength="120" autocomplete="off" placeholder="여러 개면 쉼표로 구분"></label>
+            <label><span id="threeDaysAgoLabel">3일 전 먹은 메뉴</span><input id="threeDaysAgo" maxlength="120" autocomplete="off" placeholder="예: 짜장면, 샐러드"></label>
+        </div>
+        <p class="multi-meal-help">점심과 저녁을 모두 적어도 돼요. <strong>돈가스, 햄버거</strong>처럼 쉼표로 나눠주세요.</p>
+
+        <div class="preference-block">
+            <div class="step-heading compact">
+                <span class="step-number">02</span>
+                <div><h2>오늘의 기분을 알려주세요</h2><p>복수 선택할 수 있어요.</p></div>
+            </div>
+            <div class="preferences">
+                <label class="preference"><input id="avoidSpicy" type="checkbox"><span>🌶️ 매운 음식 제외</span></label>
+                <label class="preference"><input id="preferSoup" type="checkbox"><span>🥣 따뜻한 국물</span></label>
+                <label class="preference"><input id="preferLight" type="checkbox"><span>🥬 가볍고 산뜻하게</span></label>
+            </div>
+        </div>
+
+        <button id="recommendBtn" class="primary-button" type="button">
+            <span>오늘 메뉴 3개 추천받기</span><span aria-hidden="true">→</span>
+        </button>
+        <p class="input-help">비밀 키가 없어도 추천은 정상 작동합니다.</p>
+    </section>
+
+    <section id="recommendSection" class="results-section hidden" aria-live="polite">
+        <div class="shell">
+            <div class="results-heading">
+                <div>
+                    <p class="eyebrow">오늘의 TOP 3</p>
+                    <h2>고민 끝! 이 메뉴는 어때요?</h2>
+                    <p id="modeDescription"></p>
+                </div>
+                <span id="engineBadge" class="engine-badge"></span>
+            </div>
+            <div id="recommendations" class="card-grid"></div>
+            <button id="relaxBtn" class="relax-button" type="button">마음에 안 들어요 · 조건 완화해서 다시 추천</button>
+        </div>
+    </section>
+
+    <section class="location-section shell">
+        <div class="step-heading">
+            <span class="step-number">03</span>
+            <div><h2>결정했다면, 가까운 식당 찾기</h2><p>회사 주소나 현재 위치를 설정하고 추천 카드에서 ‘주변 식당’을 눌러보세요.</p></div>
+        </div>
+        <div class="location-card">
+            <div class="location-input">
+                <label for="address">주소</label>
+                <input id="address" maxlength="150" autocomplete="street-address" placeholder="예: 서울 중구 세종대로 110">
+                <button id="useAddressBtn" class="dark-button" type="button">주소 적용</button>
+                <button id="useLocationBtn" class="outline-button" type="button">◎ 현재 위치</button>
+            </div>
+            <div class="radius-row">
+                <label for="radius">검색 반경</label>
+                <select id="radius">
+                    <option value="500">500m</option><option value="1000">1km</option>
+                    <option value="1500" selected>1.5km</option><option value="2000">2km</option>
+                    <option value="3000">3km</option>
+                </select>
+                <span id="locationStatus" class="status">위치를 설정해 주세요.</span>
+            </div>
+            <p class="map-note">카카오 로컬 검색 결과이며 실제 메뉴 판매·배달·영업 여부는 식당에 확인해 주세요.</p>
+        </div>
+    </section>
+
+    <section id="restaurantSection" class="restaurant-section hidden">
+        <div class="shell">
+            <div class="results-heading">
+                <div><p class="eyebrow">KAKAO LOCAL</p><h2 id="restaurantTitle">주변 식당</h2><p>현재 위치에서 가까운 순서예요.</p></div>
+            </div>
+            <div id="restaurants" class="restaurant-list"></div>
+        </div>
+    </section>
+
+    <section class="timeline-section shell">
+        <div class="section-title-row">
+            <div class="step-heading compact">
+                <span class="step-number">04</span>
+                <div><h2>나의 식사 타임라인</h2><p>날짜별 기록을 직접 수정하거나 삭제할 수 있어요.</p></div>
+            </div>
+            <button id="clearHistoryBtn" class="text-button" type="button">전체 기록 삭제</button>
+        </div>
+        <div id="todayChoice" class="today-choice"></div>
+        <div id="timeline" class="timeline"></div>
+    </section>
+
+    <section class="story-section">
+        <div class="shell">
+            <p class="eyebrow">HOW IT WORKS</p>
+            <h2>맛집 순위 대신, <em>내가 최근 먹은 것</em>에서 시작합니다.</h2>
+            <div class="story-grid">
+                <article><span>문제</span><h3>반복되는 결정 피로</h3><p>매일 비슷한 후보를 떠올리는 직장인의 점심 고민을 줄입니다.</p></article>
+                <article><span>핵심</span><h3>단계적으로 중복 회피</h3><p>최근 3일을 피하고, 필요하면 어제만 제외하도록 조건을 완화합니다.</p></article>
+                <article><span>AI</span><h3>이름 너머의 의미 분석</h3><p>돈가스와 치킨가스처럼 재료와 조리 경험이 유사한 메뉴까지 비교합니다.</p></article>
+                <article><span>연결</span><h3>선택에서 식당까지</h3><p>선택한 메뉴를 카카오 주변 음식점 검색으로 바로 이어줍니다.</p></article>
+            </div>
+            <div class="flow"><span>최근 3일 입력</span><b>→</b><span>의미 유사도 분석</span><b>→</b><span>3가지 추천</span><b>→</b><span>주변 식당</span></div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="shell">
+        <strong>오늘 뭐 먹지 AI</strong>
+        <p>식사·주소·위치 정보는 서버에 영구 저장하지 않으며 식사 기록은 현재 브라우저에만 보관됩니다.</p>
+        <p>지도 검색 결과와 실제 메뉴, 가격, 영업 여부는 다를 수 있습니다.</p>
+    </div>
+</footer>
+
+<div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+<script>
+    window.APP_CONFIG = {{ {"aiConfigured": ai_configured, "kakaoConfigured": kakao_configured} | tojson }};
+</script>
+<script src="{{ url_for('static', path='/app.js') }}" defer></script>
+</body>
+</html>
