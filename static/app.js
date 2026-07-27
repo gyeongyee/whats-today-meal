@@ -225,8 +225,23 @@ const SPECIAL_IMAGE_SEARCH = {
     "갈릭 쉬림프": "Hawaiian garlic shrimp plate",
 };
 
+const LOCAL_MENU_IMAGES = {
+    "두부덮밥": "/static/images/menus/tofu-rice-bowl.png",
+    "비건 카레": "/static/images/menus/vegan-curry.png",
+    "비건 비빔밥": "/static/images/menus/vegan-bibimbap.png",
+    "콩국수": "/static/images/menus/kongguksu.png",
+    "쌀 베이글": "/static/images/menus/rice-bagel.png",
+    "비건 파스타": "/static/images/menus/vegan-pasta.png",
+    "당근 라페 샌드위치": "/static/images/menus/carrot-rappee-sandwich.png",
+    "비건 김밥": "/static/images/menus/vegan-gimbap.png",
+};
+
 async function findExactMenuImage(menu) {
-    const cacheKey = `menuImage:${menu}`;
+    if (LOCAL_MENU_IMAGES[menu]) {
+        return {src: LOCAL_MENU_IMAGES[menu], page: ""};
+    }
+
+    const cacheKey = `menuImage:v2:${menu}`;
     const cached = sessionStorage.getItem(cacheKey);
     if (cached) return JSON.parse(cached);
 

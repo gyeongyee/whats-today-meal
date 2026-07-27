@@ -71,7 +71,7 @@ def test_new_diverse_menus_include_burrito():
 
     by_name = {menu["name"]: menu for menu in MENU_CATALOG}
     assert "부리또" in by_name
-    assert len(MENU_CATALOG) == 113
+    assert len(MENU_CATALOG) == 118
     assert by_name["카레"]["cuisine"] == "일식"
     assert by_name["난과 커리"]["cuisine"] == "인도"
     assert by_name["로코모코"]["cuisine"] == "양식"
@@ -121,6 +121,18 @@ def test_vegan_filter_returns_only_explicit_vegan_menus():
     )
     assert len(result.recommendations) == 3
     assert all("비건" in by_name[item.menu]["tags"] for item in result.recommendations)
+
+
+def test_requested_vegan_menus_are_available():
+    from menu_data import MENU_CATALOG
+
+    by_name = {menu["name"]: menu for menu in MENU_CATALOG}
+    requested = {
+        "비건 비빔밥", "콩국수", "쌀 베이글", "비건 파스타",
+        "당근 라페 샌드위치", "비건 김밥",
+    }
+    assert requested <= by_name.keys()
+    assert all("비건" in by_name[name]["tags"] for name in requested)
 
 
 def test_combined_diet_and_vegan_filters_still_return_three_vegan_menus():
