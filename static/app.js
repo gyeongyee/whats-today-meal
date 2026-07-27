@@ -223,6 +223,7 @@ const SPECIAL_IMAGE_SEARCH = {
     "쌀국수": "Vietnamese pho noodle soup bowl",
     "난과 커리": "Indian naan bread with curry meal",
     "갈릭 쉬림프": "Hawaiian garlic shrimp plate",
+    "마파두부덮밥": "mapo tofu rice",
 };
 
 const LOCAL_MENU_IMAGES = {
@@ -241,7 +242,7 @@ async function findExactMenuImage(menu) {
         return {src: LOCAL_MENU_IMAGES[menu], page: ""};
     }
 
-    const cacheKey = `menuImage:v2:${menu}`;
+    const cacheKey = `menuImage:v3:${menu}`;
     const cached = sessionStorage.getItem(cacheKey);
     if (cached) return JSON.parse(cached);
 
