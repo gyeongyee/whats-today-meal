@@ -36,6 +36,8 @@ class RecommendationEngine:
             score += 20 if "공유" in tags else -2
         if request.preferred_tags:
             score += min(36, 13 * len(tags & set(request.preferred_tags)))
+        if "다이어트" in request.preferred_tags:
+            score += 55 if "다이어트" in tags else -18
         if request.preferred_cuisines:
             cuisine_groups = {
                 "한식": {"한식", "분식"},
@@ -158,6 +160,15 @@ class RecommendationEngine:
 
         local_ranked: list[tuple[float, Menu, list[float]]] = []
         for menu in MENU_CATALOG:
+            tags = set(menu["tags"])
+            wants_vegan = "비건" in request.preferred_tags
+            wants_diet = "다이어트" in request.preferred_tags
+            if wants_vegan and "비건" not in tags:
+                continue
+            # 다이어트만 고르면 지정된 후보로 좁히고, 비건과 함께 고르면
+            # 비건 후보 안에서 다이어트 적합도를 우선한다.
+            if wants_diet and not wants_vegan and "다이어트" not in tags:
+                continue
             candidate = profile_of(menu)
             similarities = [
                 self._day_similarity(candidate, daily_meals)

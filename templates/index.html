@@ -6,7 +6,7 @@
     <meta name="description" content="회사 동료들의 최근 3일 식사를 분석해 모두에게 새로운 점심 메뉴를 추천합니다.">
     <meta name="theme-color" content="#ff5c35">
     <title>오늘 뭐 먹지 AI — 점심 고민을 30초 만에</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=5">
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=6">
 </head>
 <body>
 <header class="site-header">
@@ -115,6 +115,8 @@
                         <label><input class="tag-filter" type="checkbox" value="튀김"><span>✨ 바삭한 튀김</span></label>
                         <label><input class="tag-filter" type="checkbox" value="향신료"><span>🌿 향신료 풍미</span></label>
                         <label><input class="tag-filter" type="checkbox" value="가벼움"><span>🍃 담백하고 가볍게</span></label>
+                        <label><input class="tag-filter" type="checkbox" value="다이어트"><span>⚖️ 다이어트</span></label>
+                        <label><input class="tag-filter" type="checkbox" value="비건"><span>🌱 비건</span></label>
                     </div>
                 </fieldset>
             </div>
@@ -123,7 +125,7 @@
         <button id="recommendBtn" class="primary-button" type="button">
             <span>오늘 메뉴 3개 추천받기</span><span aria-hidden="true">→</span>
         </button>
-        <p class="input-help">비밀 키가 없어도 추천은 정상 작동합니다.</p>
+        <p class="input-help">아무것도 선택하지 않아도 정상 작동합니다.</p>
     </section>
 
     <section id="recommendSection" class="results-section hidden" aria-live="polite">
@@ -201,6 +203,6 @@
 <script>
     window.APP_CONFIG = {{ {"aiConfigured": ai_configured} | tojson }};
 </script>
-<script src="{{ url_for('static', path='/app.js') }}?v=5" defer></script>
+<script src="{{ url_for('static', path='/app.js') }}?v=6" defer></script>
 </body>
 </html>

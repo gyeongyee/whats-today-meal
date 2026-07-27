@@ -71,7 +71,7 @@ def test_new_diverse_menus_include_burrito():
 
     by_name = {menu["name"]: menu for menu in MENU_CATALOG}
     assert "부리또" in by_name
-    assert len(MENU_CATALOG) == 95
+    assert len(MENU_CATALOG) == 113
     assert by_name["카레"]["cuisine"] == "일식"
     assert by_name["난과 커리"]["cuisine"] == "인도"
     assert by_name["로코모코"]["cuisine"] == "양식"
@@ -86,6 +86,54 @@ def test_new_diverse_menus_include_burrito():
         "나시고렝", "똠얌꿍", "태국커리", "카오팟",
     }
     assert all(by_name[name]["cuisine"] == "동남아" for name in southeast_asian)
+
+
+def test_requested_korean_and_chinese_menus_are_classified():
+    from menu_data import MENU_CATALOG
+
+    by_name = {menu["name"]: menu for menu in MENU_CATALOG}
+    chinese = {
+        "탕수육", "사천 탕수육", "깐풍기", "짬뽕밥", "백짬뽕",
+        "차돌짬뽕", "밀면", "울면", "잡채밥", "중화비빔밥",
+    }
+    korean = {"김밥", "떡볶이", "라면", "수제비", "김치찜", "족발"}
+    assert all(by_name[name]["cuisine"] == "중식" for name in chinese)
+    assert all(by_name[name]["cuisine"] == "한식" for name in korean)
+    assert not any(menu["cuisine"] == "분식" for menu in MENU_CATALOG)
+
+
+def test_diet_filter_returns_requested_diet_menus_only():
+    result = asyncio.run(
+        make_engine().recommend(RecommendRequest(preferred_tags=["다이어트"]))
+    )
+    assert {item.menu for item in result.recommendations} <= {
+        "포케", "샐러드", "샌드위치", "두부덮밥",
+    }
+    assert len(result.recommendations) == 3
+
+
+def test_vegan_filter_returns_only_explicit_vegan_menus():
+    from menu_data import MENU_CATALOG
+
+    by_name = {menu["name"]: menu for menu in MENU_CATALOG}
+    result = asyncio.run(
+        make_engine().recommend(RecommendRequest(preferred_tags=["비건"]))
+    )
+    assert len(result.recommendations) == 3
+    assert all("비건" in by_name[item.menu]["tags"] for item in result.recommendations)
+
+
+def test_combined_diet_and_vegan_filters_still_return_three_vegan_menus():
+    from menu_data import MENU_CATALOG
+
+    by_name = {menu["name"]: menu for menu in MENU_CATALOG}
+    result = asyncio.run(
+        make_engine().recommend(
+            RecommendRequest(preferred_tags=["다이어트", "비건"])
+        )
+    )
+    assert len(result.recommendations) == 3
+    assert all("비건" in by_name[item.menu]["tags"] for item in result.recommendations)
 
 
 def test_team_recommendation_excludes_everyones_yesterday_meals():
