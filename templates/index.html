@@ -6,7 +6,7 @@
     <meta name="description" content="회사 동료들의 최근 3일 식사를 분석해 모두에게 새로운 점심 메뉴를 추천합니다.">
     <meta name="theme-color" content="#ff5c35">
     <title>오늘 뭐 먹지 AI — 점심 고민을 30초 만에</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=6">
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=7">
 </head>
 <body>
 <header class="site-header">
@@ -184,13 +184,28 @@
                 {% for cuisine, menus in menu_groups.items() %}
                 <article class="catalog-group">
                     <h3>{{ cuisine }} <small>{{ menus | length }}</small></h3>
-                    <p>{% for menu in menus %}<span>{{ menu }}</span>{% endfor %}</p>
+                    <p>{% for menu in menus %}<button class="catalog-menu" type="button" data-menu="{{ menu }}" aria-label="{{ menu }} 상세 정보 보기">{{ menu }}</button>{% endfor %}</p>
                 </article>
                 {% endfor %}
             </div>
         </div>
     </section>
 </main>
+
+<dialog id="menuDetailDialog" class="menu-detail-dialog" aria-labelledby="menuDetailTitle">
+    <button id="menuDetailClose" class="dialog-close" type="button" aria-label="메뉴 상세 닫기">×</button>
+    <div id="menuDetailVisual" class="menu-detail-visual" role="img">
+        <img id="menuDetailImage" src="/static/images/food-card-bg.webp" alt="">
+        <span id="menuDetailEmoji" aria-hidden="true">🍽️</span>
+        <a id="menuDetailSource" class="image-source hidden" target="_blank" rel="noopener noreferrer">사진 출처</a>
+    </div>
+    <p id="menuDetailMeta" class="menu-meta"></p>
+    <h2 id="menuDetailTitle">메뉴 정보</h2>
+    <p id="menuDetailDescription" class="menu-description"></p>
+    <p id="menuDetailCalories" class="menu-calories"></p>
+    <div id="menuDetailTags" class="menu-detail-tags"></div>
+    <p class="dialog-calorie-note">열량은 일반적인 1인분 기준 추정 범위예요.</p>
+</dialog>
 
 <footer>
     <div class="shell">
@@ -203,6 +218,6 @@
 <script>
     window.APP_CONFIG = {{ {"aiConfigured": ai_configured} | tojson }};
 </script>
-<script src="{{ url_for('static', path='/app.js') }}?v=6" defer></script>
+<script src="{{ url_for('static', path='/app.js') }}?v=7" defer></script>
 </body>
 </html>

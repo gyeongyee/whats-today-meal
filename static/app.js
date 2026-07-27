@@ -369,6 +369,48 @@ function makeButton(label, className, handler) {
     return button;
 }
 
+async function openMenuDetails(menu) {
+    const dialog = $("menuDetailDialog");
+    $("menuDetailTitle").textContent = menu;
+    $("menuDetailMeta").textContent = "메뉴 정보를 불러오는 중이에요…";
+    $("menuDetailDescription").textContent = "";
+    $("menuDetailCalories").textContent = "";
+    $("menuDetailTags").replaceChildren();
+
+    const visual = $("menuDetailVisual");
+    const image = $("menuDetailImage");
+    const emoji = $("menuDetailEmoji");
+    const sourceLink = $("menuDetailSource");
+    visual.className = "menu-detail-visual";
+    image.src = "/static/images/food-card-bg.webp";
+    emoji.textContent = "🍽️";
+    sourceLink.classList.add("hidden");
+    sourceLink.removeAttribute("href");
+
+    if (typeof dialog.showModal === "function") dialog.showModal();
+    else dialog.setAttribute("open", "");
+
+    try {
+        const item = await apiFetch(`/api/menus/${encodeURIComponent(menu)}`);
+        $("menuDetailMeta").textContent = `${item.cuisine} · ${item.kind}`;
+        $("menuDetailTitle").textContent = item.menu;
+        $("menuDetailDescription").textContent = item.description;
+        $("menuDetailCalories").textContent =
+            `예상 ${item.calorie_min.toLocaleString("ko-KR")}–${item.calorie_max.toLocaleString("ko-KR")} kcal`;
+        emoji.textContent = item.emoji;
+        visual.classList.add(`visual-${item.visual_key}`);
+        item.tags.forEach((tag) => {
+            const chip = document.createElement("span");
+            chip.textContent = `#${tag}`;
+            $("menuDetailTags").append(chip);
+        });
+        applyExactMenuImage(item.menu, visual, image, sourceLink);
+    } catch (error) {
+        $("menuDetailMeta").textContent = "정보를 불러오지 못했어요.";
+        $("menuDetailDescription").textContent = error.message;
+    }
+}
+
 function renderRecommendations(data) {
     $("recommendSection").classList.remove("hidden");
     const groupLabel = data.participant_count > 1 ? `${data.participant_count}명의 ` : "";
@@ -552,6 +594,13 @@ $("relaxBtn").addEventListener("click", () => {
 });
 $("addMemberBtn").addEventListener("click", addTeamMember);
 $("clearHistoryBtn").addEventListener("click", clearHistory);
+$("menuDetailClose").addEventListener("click", () => $("menuDetailDialog").close());
+$("menuDetailDialog").addEventListener("click", (event) => {
+    if (event.target === $("menuDetailDialog")) $("menuDetailDialog").close();
+});
+document.querySelectorAll(".catalog-menu").forEach((button) => {
+    button.addEventListener("click", () => openMenuDetails(button.dataset.menu));
+});
 ["yesterday", "twoDaysAgo", "threeDaysAgo"].forEach((id) => {
     $(id).addEventListener("change", saveRecentInputs);
 });

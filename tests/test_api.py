@@ -13,6 +13,8 @@ def test_home_and_static_assets_are_served():
     assert "아무것도 선택하지 않아도 정상 작동합니다." in home.text
     assert 'value="다이어트"' in home.text
     assert 'value="비건"' in home.text
+    assert 'class="catalog-menu"' in home.text
+    assert 'id="menuDetailDialog"' in home.text
     assert "점진적으로 메뉴 추가 예정" in home.text
     assert client.get("/static/app.js").status_code == 200
     assert client.get("/static/style.css").status_code == 200
@@ -55,6 +57,22 @@ def test_recommend_endpoint_validates_and_returns_three_items():
 def test_invalid_extra_input_is_rejected():
     response = client.post("/api/recommend", json={"unknown": "value"})
     assert response.status_code == 422
+
+
+def test_menu_details_api_returns_description_and_calories():
+    response = client.get("/api/menus/라면")
+    assert response.status_code == 200
+    item = response.json()
+    assert item["menu"] == "라면"
+    assert item["cuisine"] == "한식"
+    assert item["description"]
+    assert item["calorie_min"] < item["calorie_max"]
+    assert isinstance(item["tags"], list)
+
+
+def test_menu_details_api_returns_404_for_unknown_menu():
+    response = client.get("/api/menus/없는메뉴")
+    assert response.status_code == 404
 
 
 def test_team_members_are_accepted_and_counted():
