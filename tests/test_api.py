@@ -11,6 +11,8 @@ def test_home_and_static_assets_are_served():
     assert "오늘 뭐 먹지 AI" in home.text
     assert "지금 만날 수 있는 270가지 메뉴" in home.text
     assert "아무것도 선택하지 않아도 정상 작동합니다." in home.text
+    assert 'class="filter-group mood-filter-group"' in home.text
+    assert "팀원을 추가하면 모두의 어제 메뉴를 제외하고" not in home.text
     assert 'value="다이어트"' in home.text
     assert 'value="비건"' in home.text
     assert 'value="시원한 국물"' in home.text

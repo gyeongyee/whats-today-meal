@@ -64,15 +64,17 @@
                 <span class="step-number">02</span>
                 <div><h2>오늘의 기분과 메뉴 틀을 골라주세요</h2><p>원하는 만큼 고르면 AI가 구체적인 메뉴로 좁혀드려요.</p></div>
             </div>
-            <p class="preference-label">오늘의 기분</p>
-            <div class="preferences">
-                <label class="preference"><input id="avoidSpicy" type="checkbox"><span>🌶️ 매운 음식 제외</span></label>
-                <label class="preference"><input id="preferSoup" type="checkbox"><span>🥣 따뜻한 국물</span></label>
-                <label class="preference"><input id="preferLight" type="checkbox"><span>🥬 가볍고 산뜻하게</span></label>
-                <label class="preference"><input id="preferHearty" type="checkbox"><span>💪 든든하게</span></label>
-                <label class="preference"><input id="preferQuick" type="checkbox"><span>⏱️ 빠르고 간편하게</span></label>
-                <label class="preference"><input id="preferShare" type="checkbox"><span>🙌 함께 나눠먹기</span></label>
-            </div>
+            <fieldset class="filter-group mood-filter-group">
+                <legend>오늘의 기분</legend>
+                <div class="preferences">
+                    <label class="preference"><input id="avoidSpicy" type="checkbox"><span>🌶️ 매운 음식 제외</span></label>
+                    <label class="preference"><input id="preferSoup" type="checkbox"><span>🥣 따뜻한 국물</span></label>
+                    <label class="preference"><input id="preferLight" type="checkbox"><span>🥬 가볍고 산뜻하게</span></label>
+                    <label class="preference"><input id="preferHearty" type="checkbox"><span>💪 든든하게</span></label>
+                    <label class="preference"><input id="preferQuick" type="checkbox"><span>⏱️ 빠르고 간편하게</span></label>
+                    <label class="preference"><input id="preferShare" type="checkbox"><span>🙌 함께 나눠먹기</span></label>
+                </div>
+            </fieldset>
 
             <div class="preference-groups">
                 <fieldset class="filter-group">
