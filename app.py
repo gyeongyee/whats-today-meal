@@ -67,6 +67,13 @@ async def index(request: Request):
             alias or "",
             "/static/images/food-card-bg.webp",
         )
+    menu_image_map.update(
+        {
+            "물밀면": "/static/images/generated/mul-milmyeon.jpg",
+            "물회": "/static/images/generated/mulhoe.jpg",
+            "중국냉면": "/static/images/generated/chinese-naengmyeon.jpg",
+        }
+    )
     seasonal_top_menus = [
         {
             "season": "봄",
@@ -78,7 +85,7 @@ async def index(request: Request):
             "season": "여름",
             "emoji": "☀️",
             "description": "시원한 한 그릇과 든든한 보양식",
-            "menus": ["물냉면", "콩국수", "삼계탕", "물밀면", "회덮밥"],
+            "menus": ["물냉면", "콩국수", "삼계탕", "물회", "중국냉면"],
         },
         {
             "season": "가을",

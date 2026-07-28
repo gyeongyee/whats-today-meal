@@ -224,9 +224,11 @@ EXPANDED_MENU_GROUPS = {
 탕수육 정식
 마파두부밥
 중화비빔밥
+중국냉면
 초밥
 모둠초밥
 회정식
+물회
 우동정식
 돈부리
 쌀국수
@@ -272,6 +274,10 @@ WESTERN_KEYWORDS = ("햄버거", "샌드위치")
 
 
 def _cuisine(name: str) -> str:
+    if name == "물회":
+        return "일식"
+    if name == "중국냉면":
+        return "중식"
     if name.endswith("김밥"):
         return "한식"
     if any(keyword in name for keyword in JAPANESE_KEYWORDS):
@@ -404,6 +410,8 @@ def expand_menu_catalog(base_catalog: Iterable[dict[str, object]]) -> list[dict[
                     "메밀국수",
                     "판모밀",
                     "소바",
+                    "물회",
+                    "중국냉면",
                 )
             )
             and "비빔" not in name
@@ -420,8 +428,10 @@ def expand_menu_catalog(base_catalog: Iterable[dict[str, object]]) -> list[dict[
                 "장어덮밥",
             )
         )
-        if cool_soup and "시원한 국물" not in tags:
-            tags.append("시원한 국물")
+        if cool_soup:
+            for tag in ("국물", "차가움", "시원한 국물"):
+                if tag not in tags:
+                    tags.append(tag)
         if restorative and "보양식" not in tags:
             tags.append("보양식")
         menu["tags"] = tags
@@ -455,6 +465,7 @@ IMAGE_ALIAS_RULES = (
     (("라면", "라볶이"), "라면"),
     (("비빔밥",), "비빔밥"),
     (("회덮밥", "회정식"), "회덮밥"),
+    (("물회",), "회덮밥"),
     (("김치볶음밥",), "김치볶음밥"),
     (("볶음밥",), "볶음밥"),
     (("오므라이스",), "오므라이스"),
@@ -485,6 +496,7 @@ IMAGE_ALIAS_RULES = (
     (("어묵탕",), "우동"),
     (("짜장",), "짜장면"),
     (("짬뽕",), "짬뽕"),
+    (("중국냉면",), "냉면"),
     (("탕수육",), "탕수육"),
     (("마파두부",), "마파두부덮밥"),
     (("중화비빔밥",), "중화비빔밥"),
