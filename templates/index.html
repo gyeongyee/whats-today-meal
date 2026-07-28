@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#121110" media="(prefers-color-scheme: dark)">
     <title>오늘 뭐 먹지 AI — 점심 고민을 30초 만에</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=22">
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=23">
 </head>
 <body>
 <header class="site-header">
@@ -169,21 +169,20 @@
 
     <section class="seasonal-section">
         <div class="shell">
-            <p class="eyebrow">SEASONAL TOP 5</p>
+            <p class="eyebrow">MONTHLY TOP 5</p>
             <div class="seasonal-heading">
-                <h2>계절마다 생각나는 <em>인기 메뉴 TOP 5</em></h2>
+                <h2><em>{{ monthly_recommendation.month }}월의 추천 메뉴</em> TOP 5</h2>
                 <p>메뉴를 누르면 사진·설명·예상 열량을 확인할 수 있어요.</p>
             </div>
-            <div class="seasonal-grid">
-                {% for item in seasonal_top_menus %}
-                <details class="season-card season-{{ item.season }}" open>
+            <div class="seasonal-grid monthly-grid">
+                <details class="season-card monthly-card" open>
                     <summary class="season-card-heading">
-                        <span class="season-emoji" aria-hidden="true">{{ item.emoji }}</span>
-                        <div><h3>{{ item.season }}</h3><p>{{ item.description }}</p></div>
+                        <span class="season-emoji" aria-hidden="true">{{ monthly_recommendation.emoji }}</span>
+                        <div><h3>{{ monthly_recommendation.month }}월 추천</h3><p>{{ monthly_recommendation.description }}</p></div>
                         <span class="season-toggle" aria-hidden="true"></span>
                     </summary>
                     <ol>
-                        {% for menu in item.menus %}
+                        {% for menu in monthly_recommendation.menus %}
                         <li>
                             <span>{{ loop.index }}</span>
                             <button class="season-menu" type="button" data-menu="{{ menu }}" aria-label="{{ menu }} 상세 정보 보기">{{ menu }}</button>
@@ -191,7 +190,6 @@
                         {% endfor %}
                     </ol>
                 </details>
-                {% endfor %}
             </div>
         </div>
     </section>
@@ -250,6 +248,6 @@
         "menuImages": menu_image_map
     } | tojson }};
 </script>
-<script src="{{ url_for('static', path='/app.js') }}?v=16" defer></script>
+    <script src="{{ url_for('static', path='/app.js') }}?v=17" defer></script>
 </body>
 </html>

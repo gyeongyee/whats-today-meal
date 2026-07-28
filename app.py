@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -75,32 +76,28 @@ async def index(request: Request):
             "장어덮밥": "/static/images/generated/eel-rice-bowl.jpg",
         }
     )
-    seasonal_top_menus = [
-        {
-            "season": "봄",
-            "emoji": "🌸",
-            "description": "산뜻하고 향긋한 봄 점심",
-            "menus": ["쭈꾸미볶음", "바지락칼국수", "산채비빔밥", "샤브샤브", "연어덮밥"],
-        },
-        {
-            "season": "여름",
-            "emoji": "☀️",
-            "description": "시원한 한 그릇과 든든한 보양식",
-            "menus": ["물냉면", "콩국수", "삼계탕", "물회", "중국냉면"],
-        },
-        {
-            "season": "가을",
-            "emoji": "🍂",
-            "description": "구수하고 깊은 제철의 맛",
-            "menus": ["버섯전골", "추어탕", "고등어구이", "들깨칼국수", "장어덮밥"],
-        },
-        {
-            "season": "겨울",
-            "emoji": "❄️",
-            "description": "뜨끈한 국물로 채우는 점심",
-            "menus": ["김치찌개", "감자탕", "부대찌개", "만두전골", "굴국밥"],
-        },
-    ]
+    monthly_menus = {
+        1: ["떡국", "만두전골", "김치찌개", "설렁탕", "부대찌개"],
+        2: ["순두부찌개", "감자탕", "잔치국수", "돈가스", "닭갈비"],
+        3: ["쭈꾸미볶음", "바지락칼국수", "산채비빔밥", "샤브샤브", "비빔밥"],
+        4: ["비빔국수", "제육볶음", "연어덮밥", "샌드위치", "포케"],
+        5: ["냉면", "회덮밥", "초밥", "쌀국수", "막국수"],
+        6: ["물밀면", "콩국수", "비빔밀면", "물회", "삼계탕"],
+        7: ["물냉면", "콩국수", "삼계탕", "물회", "중국냉면"],
+        8: ["메밀국수", "막국수", "회덮밥", "장어덮밥", "초밥"],
+        9: ["버섯전골", "추어탕", "고등어구이", "들깨칼국수", "장어덮밥"],
+        10: ["갈비탕", "육개장", "불고기전골", "김치찜", "추어탕"],
+        11: ["칼국수", "부대찌개", "곱창전골", "알탕", "감자탕"],
+        12: ["굴국밥", "만두전골", "김치찌개", "설렁탕", "갈비탕"],
+    }
+    korea_time = timezone(timedelta(hours=9))
+    current_month = datetime.now(korea_time).month
+    monthly_recommendation = {
+        "month": current_month,
+        "emoji": "📅",
+        "description": "이달의 날씨와 계절감을 반영한 점심 메뉴",
+        "menus": monthly_menus[current_month],
+    }
     return templates.TemplateResponse(
         request=request,
         name="index.html",
@@ -109,7 +106,7 @@ async def index(request: Request):
             "menu_groups": menu_groups,
             "menu_count": len(MENU_CATALOG),
             "menu_image_map": menu_image_map,
-            "seasonal_top_menus": seasonal_top_menus,
+            "monthly_recommendation": monthly_recommendation,
         },
     )
 

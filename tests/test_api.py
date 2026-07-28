@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta, timezone
+
 from fastapi.testclient import TestClient
 
 from app import app
@@ -7,6 +9,7 @@ client = TestClient(app)
 
 def test_home_and_static_assets_are_served():
     home = client.get("/")
+    current_month = datetime.now(timezone(timedelta(hours=9))).month
     assert home.status_code == 200
     assert "오늘 뭐 먹지 AI" in home.text
     assert "지금 만날 수 있는 270가지 메뉴" in home.text
@@ -17,23 +20,22 @@ def test_home_and_static_assets_are_served():
     assert 'value="비건"' in home.text
     assert 'value="시원한 국물"' in home.text
     assert 'value="보양식"' in home.text
-    assert "계절마다 생각나는" in home.text
+    assert f"{current_month}월의 추천 메뉴" in home.text
     assert "HOW IT WORKS" not in home.text
-    assert home.text.count('class="season-menu"') == 20
-    assert "여름" in home.text and "물냉면" in home.text and "삼계탕" in home.text
-    assert "물회" in home.text and "중국냉면" in home.text
+    assert home.text.count('class="season-menu"') == 5
+    assert f"{current_month}월 추천" in home.text
     assert 'class="catalog-menu"' in home.text
     assert 'id="menuDetailDialog"' in home.text
     assert "점진적으로 메뉴 추가 예정" in home.text
     assert client.get("/static/app.js").status_code == 200
     assert client.get("/static/style.css").status_code == 200
-    assert "style.css?v=22" in home.text
+    assert "style.css?v=23" in home.text
     assert 'class="timeline-disclosure"' in home.text
     assert 'media="(prefers-color-scheme: dark)"' in home.text
-    assert "app.js?v=16" in home.text
+    assert "app.js?v=17" in home.text
     assert home.text.count('value="매운맛"') == 1
     assert home.text.count('id="avoidSpicy"') == 1
-    assert home.text.count('class="season-card season-') == 4
+    assert home.text.count('class="season-card monthly-card"') == 1
     assert home.text.count('class="catalog-group"') >= 5
     assert client.get("/static/images/menus/tofu-rice-bowl.png").status_code == 200
     assert client.get("/static/images/menus/vegan-gimbap.png").status_code == 200

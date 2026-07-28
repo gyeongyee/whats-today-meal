@@ -5,11 +5,11 @@
     --paper: #ffffff;
     --ink: #28231f;
     --muted: #766f68;
-    --mustard: #ffd400;
-    --mustard-dark: #6d5b00;
-    --mustard-soft: #fff6c7;
-    --mustard-pale: #fffbea;
-    --mustard-border: #eadb83;
+    --mustard: #f5b420;
+    --mustard-dark: #704b00;
+    --mustard-soft: #fff0ca;
+    --mustard-pale: #fff9eb;
+    --mustard-border: #e5c272;
     --orange: var(--mustard);
     --orange-dark: var(--mustard-dark);
     --yellow: var(--mustard);
@@ -110,7 +110,7 @@ input, select {
     width: 100%; border: 1px solid var(--line); border-radius: 14px; padding: 14px 15px;
     background: white; outline: none; transition: border-color .15s, box-shadow .15s;
 }
-input:focus, select:focus { border-color: var(--mustard); box-shadow: 0 0 0 4px rgba(255,212,0,.18); }
+input:focus, select:focus { border-color: var(--mustard); box-shadow: 0 0 0 4px rgba(245,180,32,.18); }
 .preference-block { margin-top: 40px; }
 .preference-label { margin: 0 0 10px; color: var(--muted); font-size: 12px; font-weight: 800; }
 .mood-filter-group { margin-bottom: 12px; }
@@ -130,7 +130,7 @@ input:focus, select:focus { border-color: var(--mustard); box-shadow: 0 0 0 4px 
     display: block; margin: 0; border: 1px solid var(--line); background: white;
     padding: 12px 15px; border-radius: 13px; cursor: pointer; transition: .15s; color: var(--ink);
 }
-.preference input:checked + span { color: var(--mustard-dark); border-color: var(--mustard); background: var(--mustard-soft); box-shadow: 0 0 0 2px rgba(255,212,0,.16); }
+.preference input:checked + span { color: var(--mustard-dark); border-color: var(--mustard); background: var(--mustard-soft); box-shadow: 0 0 0 2px rgba(245,180,32,.16); }
 .preference-groups { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 22px; }
 .filter-group { min-width: 0; margin: 0; padding: 16px; border: 1px solid var(--line); border-radius: 17px; background: #fff; }
 .filter-group legend { padding: 0 7px; font-size: 13px; font-weight: 900; }
@@ -139,13 +139,13 @@ input:focus, select:focus { border-color: var(--mustard); box-shadow: 0 0 0 4px 
     display: block; margin: 0; padding: 9px 11px; border: 1px solid var(--line);
     border-radius: 11px; background: white; cursor: pointer; color: #5f5852; font-size: 12px; font-weight: 700;
 }
-.filter-chips input:checked + span { border-color: var(--mustard); color: var(--mustard-dark); background: var(--mustard-soft); box-shadow: 0 0 0 2px rgba(255,212,0,.16); }
+.filter-chips input:checked + span { border-color: var(--mustard); color: var(--mustard-dark); background: var(--mustard-soft); box-shadow: 0 0 0 2px rgba(245,180,32,.16); }
 .primary-button {
     width: 100%; margin-top: 34px; border: 0; border-radius: 16px; padding: 18px 22px;
     display: flex; justify-content: center; gap: 15px; background: var(--mustard); color: #28200d;
-    font-weight: 900; font-size: 17px; cursor: pointer; box-shadow: 0 12px 26px rgba(160,132,0,.2);
+    font-weight: 900; font-size: 17px; cursor: pointer; box-shadow: 0 12px 26px rgba(143,94,0,.2);
 }
-.primary-button:hover { background: #e7c000; }
+.primary-button:hover { background: #dda018; }
 .primary-button:disabled { opacity: .65; cursor: wait; }
 .input-help { margin: 13px 0 0; color: #6a5f56; text-align: center; font-size: 14px; font-weight: 800; }
 
@@ -157,7 +157,7 @@ input:focus, select:focus { border-color: var(--mustard); box-shadow: 0 0 0 4px 
 .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .menu-card { background: #fffdf9; color: var(--ink); border: 2px solid transparent; border-radius: 22px; padding: 20px; min-height: 530px; display: flex; flex-direction: column; transition: transform .15s, border-color .15s; }
 .menu-card:hover { transform: translateY(-3px); }
-.menu-card.selected { border-color: var(--mustard); box-shadow: 0 0 0 4px rgba(255,212,0,.22); }
+.menu-card.selected { border-color: var(--mustard); box-shadow: 0 0 0 4px rgba(245,180,32,.22); }
 .menu-card-top { display: flex; justify-content: space-between; align-items: center; }
 .menu-number { color: var(--mustard-dark); font-size: 26px; font-weight: 900; }
 .match { color: var(--mustard-dark); background: var(--mustard-soft); border-radius: 99px; padding: 6px 9px; font-size: 11px; font-weight: 800; }
@@ -238,6 +238,9 @@ input:focus, select:focus { border-color: var(--mustard); box-shadow: 0 0 0 4px 
 .seasonal-heading h2 em { white-space: nowrap; }
 .seasonal-heading p { margin: 12px 0 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
 .seasonal-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 13px; }
+.seasonal-grid.monthly-grid { grid-template-columns: minmax(0, 1fr); }
+.monthly-card { width: 100%; }
+.monthly-card ol { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 .season-card { padding: 22px; border: 1px solid var(--line); border-radius: 21px; background: #fff; box-shadow: 0 8px 24px rgba(88,57,34,.045); }
 .season-card-heading { display: flex; align-items: center; gap: 12px; min-height: 55px; padding-bottom: 17px; border-bottom: 1px solid var(--line); list-style: none; }
 .season-card-heading::-webkit-details-marker { display: none; }
@@ -323,6 +326,7 @@ footer p { margin: 8px 0 0; font-size: 11px; line-height: 1.6; }
     .history-grid, .card-grid, .member-meals, .preference-groups { grid-template-columns: 1fr; }
     .menu-card { min-height: 0; }
     .seasonal-grid { grid-template-columns: 1fr 1fr; }
+    .monthly-card ol { grid-template-columns: repeat(5, minmax(0, 1fr)); }
     .catalog-groups { grid-template-columns: repeat(2, 1fr); }
     .timeline { grid-template-columns: 1fr; }
     .results-heading { align-items: flex-start; flex-direction: column; }
@@ -366,6 +370,7 @@ footer p { margin: 8px 0 0; font-size: 11px; line-height: 1.6; }
     .seasonal-section { padding-block: 58px; }
     .seasonal-heading { margin-bottom: 24px; }
     .seasonal-grid { grid-template-columns: 1fr; }
+    .monthly-card ol { grid-template-columns: 1fr; }
     .season-card { padding: 14px 16px; }
     .season-card-heading { min-height: 44px; padding-bottom: 0; border-bottom: 0; cursor: pointer; }
     .season-card[open] .season-card-heading { padding-bottom: 12px; border-bottom: 1px solid var(--line); }
@@ -421,8 +426,8 @@ footer p { margin: 8px 0 0; font-size: 11px; line-height: 1.6; }
         --paper: #1a1816;
         --ink: #f5f1ed;
         --muted: #b9b0a8;
-        --mustard: #ffd400;
-        --mustard-dark: #ffe45c;
+        --mustard: #f5b420;
+        --mustard-dark: #ffd06a;
         --mustard-soft: #3b3414;
         --mustard-pale: #29260f;
         --mustard-border: #6f621f;
