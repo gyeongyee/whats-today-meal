@@ -316,17 +316,34 @@ footer p { margin: 8px 0 0; font-size: 11px; line-height: 1.6; }
     .season-card[open] .season-card-heading { padding-bottom: 12px; border-bottom: 1px solid var(--line); }
     .season-card-heading .season-emoji { width: 38px; height: 38px; border-radius: 12px; font-size: 20px; }
     .season-toggle {
-        display: grid;
+        position: relative;
+        display: block;
+        flex: 0 0 auto;
         width: 30px;
         height: 30px;
         margin-left: auto;
-        place-items: center;
         border-radius: 50%;
-        background: rgba(255,255,255,.82);
-        font-size: 20px;
-        transition: transform .18s ease;
+        border: 1px solid rgba(231,70,32,.14);
+        background: #fff8f2;
+        box-shadow: 0 4px 12px rgba(88,57,34,.08);
+        transition: background .18s ease, box-shadow .18s ease;
     }
-    .season-card[open] .season-toggle { transform: rotate(180deg); }
+    .season-toggle::before,
+    .season-toggle::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 11px;
+        height: 2px;
+        border-radius: 99px;
+        background: var(--orange-dark);
+        transform: translate(-50%, -50%);
+        transition: opacity .18s ease, transform .18s ease;
+    }
+    .season-toggle::after { transform: translate(-50%, -50%) rotate(90deg); }
+    .season-card[open] .season-toggle { background: #fff0e8; box-shadow: none; }
+    .season-card[open] .season-toggle::after { opacity: 0; transform: translate(-50%, -50%) rotate(0); }
     .season-card ol { margin-top: 12px; }
     .catalog-heading { align-items: flex-start; flex-direction: column; }
     .catalog-section { padding-block: 58px; }
