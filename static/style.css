@@ -193,6 +193,20 @@ input:focus, select:focus { border-color: var(--orange); box-shadow: 0 0 0 4px r
     box-shadow: 0 10px 34px rgba(88,57,34,.05);
 }
 
+.timeline-summary {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    list-style: none;
+    cursor: pointer;
+}
+.timeline-summary::-webkit-details-marker { display: none; }
+.timeline-summary .step-heading { flex: 1; margin: 0; }
+.timeline-content { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
+.timeline-actions { display: flex; justify-content: flex-end; margin-bottom: 9px; }
+.timeline-disclosure[open] .timeline-toggle { background: #fff0e8; box-shadow: none; }
+.timeline-disclosure[open] .timeline-toggle::after { opacity: 0; transform: translate(-50%, -50%) rotate(0); }
+
 .section-title-row { display: flex; justify-content: space-between; gap: 20px; align-items: flex-start; }
 .text-button { border: 0; padding: 4px; background: transparent; color: var(--muted); text-decoration: underline; cursor: pointer; font-size: 12px; }
 .today-choice { display: flex; align-items: center; gap: 14px; background: #fff0e9; border: 1px solid #ffd5c7; border-radius: 17px; padding: 17px 20px; margin-bottom: 12px; }
@@ -215,7 +229,7 @@ input:focus, select:focus { border-color: var(--orange); box-shadow: 0 0 0 4px r
 
 .seasonal-section { padding-block: 100px; border-block: 1px solid var(--line); background: #fff; }
 .seasonal-heading { margin-bottom: 42px; }
-.seasonal-heading h2 { max-width: none; margin: 0; white-space: nowrap; font-size: clamp(32px, 4.4vw, 52px); letter-spacing: -.055em; }
+.seasonal-heading h2 { max-width: none; margin: 0; white-space: nowrap; font-size: clamp(28px, 4vw, 42px); letter-spacing: -.05em; }
 .seasonal-heading h2 em { white-space: nowrap; }
 .seasonal-heading p { margin: 12px 0 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
 .seasonal-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 13px; }
@@ -344,7 +358,7 @@ footer p { margin: 8px 0 0; font-size: 11px; line-height: 1.6; }
     .results-section { padding-block: 60px; }
     .menu-card { padding: 16px; }
     .timeline-section { margin-block: 38px; padding: 22px 14px; border-radius: 20px; }
-    .seasonal-heading h2 { white-space: normal; font-size: 36px; }
+    .seasonal-heading h2 { white-space: normal; }
     .seasonal-section { padding-block: 58px; }
     .seasonal-heading { margin-bottom: 24px; }
     .seasonal-grid { grid-template-columns: 1fr; }
@@ -459,7 +473,8 @@ footer p { margin: 8px 0 0; font-size: 11px; line-height: 1.6; }
     .season-toggle,
     .catalog-toggle { border-color: #5c3a30; background: #30211c; box-shadow: none; }
     .season-card[open] .season-toggle,
-    .catalog-group[open] .catalog-toggle { background: #42271f; }
+    .catalog-group[open] .catalog-toggle,
+    .timeline-disclosure[open] .timeline-toggle { background: #42271f; }
     .catalog-heading > span,
     .person-timeline-heading span,
     .menu-detail-tags span { color: #a8d8b5; background: #203027; }

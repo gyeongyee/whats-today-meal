@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#121110" media="(prefers-color-scheme: dark)">
     <title>오늘 뭐 먹지 AI — 점심 고민을 30초 만에</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=19">
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=20">
 </head>
 <body>
 <header class="site-header">
@@ -149,15 +149,22 @@
     </section>
 
     <section class="timeline-section shell">
-        <div class="section-title-row">
-            <div class="step-heading compact">
-                <span class="step-number">03</span>
-                <div><h2>사람별 식사 타임라인</h2><p>공동 메뉴를 결정하면 오늘 날짜로 모두에게 저장돼요.</p></div>
+        <details class="timeline-disclosure">
+            <summary class="timeline-summary">
+                <div class="step-heading compact">
+                    <span class="step-number">03</span>
+                    <div><h2>사람별 식사 타임라인</h2><p>공동 메뉴를 결정하면 오늘 날짜로 모두에게 저장돼요.</p></div>
+                </div>
+                <span class="catalog-toggle timeline-toggle" aria-hidden="true"></span>
+            </summary>
+            <div class="timeline-content">
+                <div class="timeline-actions">
+                    <button id="clearHistoryBtn" class="text-button" type="button">전체 기록 삭제</button>
+                </div>
+                <div id="todayChoice" class="today-choice"></div>
+                <div id="timeline" class="timeline"></div>
             </div>
-            <button id="clearHistoryBtn" class="text-button" type="button">전체 기록 삭제</button>
-        </div>
-        <div id="todayChoice" class="today-choice"></div>
-        <div id="timeline" class="timeline"></div>
+        </details>
     </section>
 
     <section class="seasonal-section">
