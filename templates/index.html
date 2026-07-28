@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#121110" media="(prefers-color-scheme: dark)">
     <title>오늘 뭐 먹지 AI — 점심 고민을 30초 만에</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=26">
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=27">
 </head>
 <body>
 <header class="site-header">
@@ -169,9 +169,9 @@
 
     <section class="seasonal-section">
         <div class="shell">
-            <p class="eyebrow">MONTHLY TOP 5</p>
+            <p class="eyebrow">MONTHLY TOP 3</p>
             <div class="seasonal-heading">
-                <h2><em>{{ monthly_recommendation.month }}월의 추천 메뉴</em> TOP 5</h2>
+                <h2><em>{{ monthly_recommendation.month }}월의 추천 메뉴</em> TOP 3</h2>
                 <p>메뉴를 누르면 사진·설명·예상 열량을 확인할 수 있어요.</p>
             </div>
             <div class="seasonal-grid monthly-grid">
@@ -182,9 +182,10 @@
                         <span class="season-toggle" aria-hidden="true"></span>
                     </summary>
                     <ol>
-                        {% for menu in monthly_recommendation.menus %}
+                        {% set medals = ["🥇", "🥈", "🥉"] %}
+                        {% for menu in monthly_recommendation.menus[:3] %}
                         <li>
-                            <span>{{ loop.index }}</span>
+                            <span class="rank-medal rank-{{ loop.index }}" aria-label="{{ loop.index }}위">{{ medals[loop.index0] }}</span>
                             <button class="season-menu" type="button" data-menu="{{ menu }}" aria-label="{{ menu }} 상세 정보 보기">{{ menu }}</button>
                         </li>
                         {% endfor %}

@@ -26,9 +26,12 @@ def test_home_and_static_assets_are_served():
     assert 'value="보양식"' in home.text
     assert f"{current_month}월의 추천 메뉴" in home.text
     assert "HOW IT WORKS" not in home.text
-    assert home.text.count('class="season-menu"') == 5
+    assert home.text.count('class="season-menu"') == 3
     assert home.text.count('class="season-menu situation-menu"') == 12
     assert f"{current_month}월 추천" in home.text
+    assert "MONTHLY TOP 3" in home.text
+    assert "TOP 5" not in home.text
+    assert home.text.count('class="rank-medal rank-') == 3
     assert "비 오는 날" in home.text and "바지락칼국수" in home.text
     assert "힘든 날" in home.text and "제육볶음" in home.text
     assert "회식" in home.text and "보쌈" in home.text
@@ -38,7 +41,7 @@ def test_home_and_static_assets_are_served():
     assert "점진적으로 메뉴 추가 예정" in home.text
     assert client.get("/static/app.js").status_code == 200
     assert client.get("/static/style.css").status_code == 200
-    assert "style.css?v=26" in home.text
+    assert "style.css?v=27" in home.text
     assert 'class="timeline-disclosure"' in home.text
     assert 'media="(prefers-color-scheme: dark)"' in home.text
     assert "app.js?v=18" in home.text
