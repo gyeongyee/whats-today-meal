@@ -174,6 +174,7 @@ class RecommendationEngine:
                 "다이어트",
                 "시원한 국물",
                 "보양식",
+                "매운맛",
             } & set(request.preferred_tags)
             if wants_vegan and "비건" not in tags:
                 continue

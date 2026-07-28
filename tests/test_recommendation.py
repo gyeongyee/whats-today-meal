@@ -104,6 +104,30 @@ def test_spicy_items_are_avoided_when_requested():
     assert not {item.menu for item in result.recommendations} & spicy_names
 
 
+def test_spicy_preference_excludes_plain_bibimbap_family():
+    from menu_data import MENU_CATALOG
+
+    by_name = {menu["name"]: menu for menu in MENU_CATALOG}
+    plain_bibimbap = {
+        "비빔밥",
+        "돌솥비빔밥",
+        "전주비빔밥",
+        "산채비빔밥",
+        "육회비빔밥",
+    }
+    assert all("매운맛" not in by_name[name]["tags"] for name in plain_bibimbap)
+    assert "매운맛" in by_name["비빔밀면"]["tags"]
+
+    result = asyncio.run(
+        make_engine().recommend(RecommendRequest(preferred_tags=["매운맛"]))
+    )
+    assert all(
+        "매운맛" in by_name[item.menu]["tags"]
+        for item in result.recommendations
+    )
+    assert not {item.menu for item in result.recommendations} & plain_bibimbap
+
+
 def test_all_of_yesterdays_multiple_meals_are_excluded():
     result = asyncio.run(
         make_engine().recommend(

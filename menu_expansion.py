@@ -357,7 +357,35 @@ def _tags(name: str, group: str) -> list[str]:
         add("닭고기")
     if any(keyword in name for keyword in ("굴", "재첩", "황태", "동태", "대구", "꽃게", "해물", "오징어", "낙지", "쭈꾸미", "고등어", "삼치", "갈치", "임연수", "조기", "생선", "회", "연어", "장어", "참치", "알탕", "매운탕", "새우")):
         add("해산물")
-    if any(keyword in name for keyword in ("김치", "매운", "얼큰", "육개장", "닭개장", "짬뽕", "고추장", "떡볶이", "라볶이", "비빔", "쫄면", "장칼국수", "낙지", "쭈꾸미", "오징어볶음")):
+    spicy_bibim_menus = {
+        "비빔국수",
+        "비빔막국수",
+        "비빔냉면",
+        "비빔밀면",
+        "중화비빔밥",
+    }
+    if (
+        name in spicy_bibim_menus
+        or any(
+            keyword in name
+            for keyword in (
+                "김치",
+                "매운",
+                "얼큰",
+                "육개장",
+                "닭개장",
+                "짬뽕",
+                "고추장",
+                "떡볶이",
+                "라볶이",
+                "쫄면",
+                "장칼국수",
+                "낙지",
+                "쭈꾸미",
+                "오징어볶음",
+            )
+        )
+    ):
         add("매운맛")
     if any(keyword in name for keyword in ("가스", "튀김", "탕수육", "군만두")):
         add("튀김")
