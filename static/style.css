@@ -88,6 +88,7 @@ em { color: var(--orange); font-style: normal; font-family: "Gowun Dodum", sans-
     color: var(--green); background: white; cursor: pointer; font-weight: 800; font-size: 13px;
 }
 .team-members { display: grid; gap: 10px; margin-top: 17px; }
+.team-members:empty { display: none; margin-top: 0; }
 .team-member-card { padding: 15px; border: 1px solid #dfe8dc; border-radius: 16px; background: white; }
 .member-card-header { display: grid; grid-template-columns: auto minmax(120px, 240px) 1fr; align-items: center; gap: 10px; margin-bottom: 12px; }
 .member-card-header > span { color: var(--green); font-size: 11px; font-weight: 900; }
@@ -268,22 +269,49 @@ footer p { margin: 8px 0 0; font-size: 11px; line-height: 1.6; }
 }
 @media (max-width: 560px) {
     .shell, .site-header { width: min(100% - 28px, 1120px); }
-    .site-header { height: 62px; }
+    .site-header { height: 56px; }
     .privacy-chip { display: none; }
-    .hero h1 { font-size: 42px; }
-    .workspace { border-radius: 24px; margin-bottom: 60px; }
+    .hero { padding-block: 28px 38px; }
+    .hero .eyebrow { margin-bottom: 10px; }
+    .hero h1 { font-size: 39px; line-height: 1.12; }
+    .hero-copy { margin: 16px 0 0; font-size: 14px; line-height: 1.65; }
+    .workspace { padding: 18px; border-radius: 21px; margin-bottom: 42px; }
+    .step-heading { gap: 11px; margin-bottom: 17px; }
+    .step-heading.compact { margin-bottom: 13px; }
+    .step-number { width: 36px; height: 36px; border-radius: 12px; font-size: 11px; }
+    .step-heading h2 { font-size: 21px; line-height: 1.3; }
+    .step-heading p, .results-heading p { margin-top: 4px; font-size: 12px; }
+    .history-grid { gap: 9px; }
+    label > span { margin-bottom: 5px; font-size: 12px; }
+    input, select { padding: 11px 12px; border-radius: 12px; font-size: 13px; }
+    .multi-meal-help { margin-top: 8px; line-height: 1.5; }
     .preferences { display: flex; flex-wrap: wrap; gap: 7px; }
     .preference span { padding: 9px 11px; font-size: 12px; text-align: left; }
-    .team-block { padding: 17px; }
-    .team-heading { flex-direction: column; }
+    .team-block { margin-top: 18px; padding: 14px; }
+    .team-heading { flex-direction: column; gap: 10px; }
+    .team-heading h3 { margin: 2px 0 0; font-size: 17px; }
     .add-member-button { width: 100%; }
+    .team-empty { margin-top: 0; padding-top: 7px; line-height: 1.45; }
     .member-card-header { grid-template-columns: auto 1fr auto; }
+    .preference-block { margin-top: 25px; }
+    .filter-group { padding: 12px; }
+    .preference-groups { gap: 9px; margin-top: 9px; }
+    .mood-filter-group { margin-bottom: 9px; }
+    .primary-button { margin-top: 22px; padding: 15px 17px; font-size: 15px; }
+    .input-help { margin-top: 9px; font-size: 13px; }
     .results-section { padding-block: 60px; }
-    .timeline-section { padding-block: 65px; }
+    .menu-card { padding: 16px; }
+    .timeline-section { padding-block: 52px; }
     .seasonal-heading h2 { white-space: normal; font-size: 36px; }
+    .seasonal-section { padding-block: 58px; }
+    .seasonal-heading { margin-bottom: 24px; }
     .seasonal-grid { grid-template-columns: 1fr; }
+    .season-card { padding: 16px; }
     .catalog-heading { align-items: flex-start; flex-direction: column; }
+    .catalog-section { padding-block: 58px; }
+    .catalog-heading { gap: 12px; margin-bottom: 22px; }
     .catalog-groups { grid-template-columns: 1fr; }
+    .catalog-group { padding: 14px; }
     .timeline-row { grid-template-columns: 1fr auto auto; }
     .timeline-row time { grid-column: 1 / -1; }
     .section-title-row { flex-direction: column; }
