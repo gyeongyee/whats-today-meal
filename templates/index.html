@@ -6,7 +6,7 @@
     <meta name="description" content="회사 동료들의 최근 3일 식사를 분석해 모두에게 새로운 점심 메뉴를 추천합니다.">
     <meta name="theme-color" content="#ff5c35">
     <title>오늘 뭐 먹지 AI — 점심 고민을 30초 만에</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=9">
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=10">
 </head>
 <body>
 <header class="site-header">
@@ -158,17 +158,31 @@
         <div id="timeline" class="timeline"></div>
     </section>
 
-    <section class="story-section">
+    <section class="seasonal-section">
         <div class="shell">
-            <p class="eyebrow">HOW IT WORKS</p>
-            <h2>감으로 고르기 대신, <em>우리가 최근 먹은 것</em>에서 시작합니다.</h2>
-            <div class="story-grid">
-                <article><span>문제</span><h3>반복되는 결정 피로</h3><p>매일 비슷한 후보를 떠올리는 직장인의 점심 고민을 줄입니다.</p></article>
-                <article><span>핵심</span><h3>단계적으로 중복 회피</h3><p>최근 3일을 피하고, 필요하면 어제만 제외하도록 조건을 완화합니다.</p></article>
-                <article><span>AI</span><h3>이름 너머의 의미 분석</h3><p>돈가스와 치킨가스처럼 재료와 조리 경험이 유사한 메뉴까지 비교합니다.</p></article>
-                <article><span>기록</span><h3>사람별 식사 기억</h3><p>공동 선택을 각 참여자의 날짜별 기록에 남겨 다음 추천에 활용합니다.</p></article>
+            <p class="eyebrow">SEASONAL TOP 5</p>
+            <div class="seasonal-heading">
+                <h2>계절마다 생각나는 <em>인기 메뉴 TOP 5</em></h2>
+                <p>메뉴를 누르면 사진·설명·예상 열량을 확인할 수 있어요.</p>
             </div>
-            <div class="flow"><span>팀 최근 식사 입력</span><b>→</b><span>의미 유사도 분석</span><b>→</b><span>3가지 추천</span><b>→</b><span>사람별 저장</span></div>
+            <div class="seasonal-grid">
+                {% for item in seasonal_top_menus %}
+                <article class="season-card season-{{ item.season }}">
+                    <div class="season-card-heading">
+                        <span aria-hidden="true">{{ item.emoji }}</span>
+                        <div><h3>{{ item.season }}</h3><p>{{ item.description }}</p></div>
+                    </div>
+                    <ol>
+                        {% for menu in item.menus %}
+                        <li>
+                            <span>{{ loop.index }}</span>
+                            <button class="season-menu" type="button" data-menu="{{ menu }}" aria-label="{{ menu }} 상세 정보 보기">{{ menu }}</button>
+                        </li>
+                        {% endfor %}
+                    </ol>
+                </article>
+                {% endfor %}
+            </div>
         </div>
     </section>
 
@@ -223,6 +237,6 @@
         "menuImages": menu_image_map
     } | tojson }};
 </script>
-<script src="{{ url_for('static', path='/app.js') }}?v=12" defer></script>
+<script src="{{ url_for('static', path='/app.js') }}?v=13" defer></script>
 </body>
 </html>

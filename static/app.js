@@ -627,7 +627,7 @@ $("menuDetailClose").addEventListener("click", () => $("menuDetailDialog").close
 $("menuDetailDialog").addEventListener("click", (event) => {
     if (event.target === $("menuDetailDialog")) $("menuDetailDialog").close();
 });
-document.querySelectorAll(".catalog-menu").forEach((button) => {
+document.querySelectorAll(".catalog-menu, .season-menu").forEach((button) => {
     button.addEventListener("click", () => openMenuDetails(button.dataset.menu));
 });
 ["yesterday", "twoDaysAgo", "threeDaysAgo"].forEach((id) => {

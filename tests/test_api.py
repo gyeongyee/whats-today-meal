@@ -15,6 +15,10 @@ def test_home_and_static_assets_are_served():
     assert 'value="비건"' in home.text
     assert 'value="시원한 국물"' in home.text
     assert 'value="보양식"' in home.text
+    assert "계절마다 생각나는" in home.text
+    assert "HOW IT WORKS" not in home.text
+    assert home.text.count('class="season-menu"') == 20
+    assert "여름" in home.text and "물냉면" in home.text and "삼계탕" in home.text
     assert 'class="catalog-menu"' in home.text
     assert 'id="menuDetailDialog"' in home.text
     assert "점진적으로 메뉴 추가 예정" in home.text

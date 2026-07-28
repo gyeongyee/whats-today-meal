@@ -46,7 +46,7 @@ button { color: inherit; }
 
 .hero { min-height: 520px; display: grid; grid-template-columns: 1.2fr .8fr; align-items: center; gap: 50px; padding-block: 65px 85px; }
 .eyebrow { margin: 0 0 14px; color: var(--orange-dark); font-weight: 900; font-size: 13px; letter-spacing: .12em; }
-.hero h1, .story-section h2 { margin: 0; font-size: clamp(44px, 6vw, 72px); line-height: 1.17; letter-spacing: -.065em; }
+.hero h1 { margin: 0; font-size: clamp(44px, 6vw, 72px); line-height: 1.17; letter-spacing: -.065em; }
 em { color: var(--orange); font-style: normal; font-family: "Gowun Dodum", sans-serif; }
 .hero-copy { max-width: 630px; margin: 24px 0; color: var(--muted); line-height: 1.8; font-size: 17px; }
 .hero-visual { display: grid; place-items: center; }
@@ -194,15 +194,23 @@ input:focus, select:focus { border-color: var(--orange); box-shadow: 0 0 0 4px r
 .small-button.ghost { background: #efe9e2; color: var(--muted); }
 .empty-state { margin: 0; padding: 28px; border: 1px dashed var(--line); border-radius: 16px; color: var(--muted); text-align: center; font-size: 13px; }
 
-.story-section { padding-block: 100px; background: #f3e9dc; }
-.story-section h2 { max-width: 800px; font-size: clamp(34px, 5vw, 55px); }
-.story-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 13px; margin-top: 50px; }
-.story-grid article { padding: 22px; background: rgba(255,255,255,.58); border: 1px solid rgba(255,255,255,.8); border-radius: 19px; }
-.story-grid span { color: var(--orange-dark); font-size: 11px; font-weight: 900; }
-.story-grid h3 { margin: 12px 0 9px; font-size: 17px; }
-.story-grid p { margin: 0; color: var(--muted); line-height: 1.7; font-size: 13px; }
-.flow { display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 28px; padding: 19px; border-radius: 17px; background: var(--ink); color: white; font-size: 13px; font-weight: 700; }
-.flow b { color: var(--yellow); }
+.seasonal-section { padding-block: 100px; background: #f3e9dc; }
+.seasonal-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 42px; }
+.seasonal-heading h2 { max-width: 720px; margin: 0; font-size: clamp(34px, 5vw, 55px); }
+.seasonal-heading p { max-width: 300px; margin: 0 0 7px; color: var(--muted); font-size: 13px; line-height: 1.7; }
+.seasonal-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 13px; }
+.season-card { padding: 22px; border: 1px solid rgba(255,255,255,.85); border-radius: 21px; background: rgba(255,255,255,.62); }
+.season-card-heading { display: flex; align-items: center; gap: 12px; min-height: 55px; padding-bottom: 17px; border-bottom: 1px solid var(--line); }
+.season-card-heading > span { display: grid; flex: 0 0 auto; width: 42px; height: 42px; place-items: center; border-radius: 14px; background: #fff; font-size: 23px; }
+.season-card-heading h3 { margin: 0; font-size: 20px; }
+.season-card-heading p { margin: 3px 0 0; color: var(--muted); font-size: 10px; line-height: 1.45; }
+.season-card ol { display: grid; gap: 7px; margin: 17px 0 0; padding: 0; list-style: none; }
+.season-card li { display: grid; grid-template-columns: 25px 1fr; align-items: center; gap: 7px; }
+.season-card li > span { color: var(--orange-dark); font-size: 11px; font-weight: 900; text-align: center; }
+.season-menu { width: 100%; padding: 10px 12px; border: 0; border-radius: 11px; color: var(--ink); background: rgba(255,255,255,.72); font: inherit; font-size: 13px; font-weight: 800; text-align: left; cursor: pointer; transition: transform .16s ease, color .16s ease, background .16s ease; }
+.season-menu:hover, .season-menu:focus-visible { color: #fff; background: var(--orange-dark); transform: translateX(2px); outline: none; }
+.season-여름 .season-card-heading > span { background: #fff2c9; }
+.season-겨울 .season-card-heading > span { background: #e8f2f5; }
 .catalog-section { padding-block: 90px; background: #fffaf1; }
 .catalog-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 30px; }
 .catalog-heading h2 { margin: 0; font-size: clamp(28px, 4vw, 42px); letter-spacing: -.05em; }
@@ -240,7 +248,7 @@ footer p { margin: 8px 0 0; font-size: 11px; line-height: 1.6; }
     .hero-visual { display: none; }
     .history-grid, .card-grid, .member-meals, .preference-groups { grid-template-columns: 1fr; }
     .menu-card { min-height: 0; }
-    .story-grid { grid-template-columns: 1fr 1fr; }
+    .seasonal-grid { grid-template-columns: 1fr 1fr; }
     .catalog-groups { grid-template-columns: repeat(2, 1fr); }
     .timeline { grid-template-columns: 1fr; }
     .results-heading { align-items: flex-start; flex-direction: column; }
@@ -259,14 +267,13 @@ footer p { margin: 8px 0 0; font-size: 11px; line-height: 1.6; }
     .preference span { text-align: center; }
     .results-section { padding-block: 60px; }
     .timeline-section { padding-block: 65px; }
-    .story-grid { grid-template-columns: 1fr; }
+    .seasonal-heading { align-items: flex-start; flex-direction: column; }
+    .seasonal-grid { grid-template-columns: 1fr; }
     .catalog-heading { align-items: flex-start; flex-direction: column; }
     .catalog-groups { grid-template-columns: 1fr; }
     .timeline-row { grid-template-columns: 1fr auto auto; }
     .timeline-row time { grid-column: 1 / -1; }
     .section-title-row { flex-direction: column; }
-    .flow { align-items: stretch; flex-direction: column; text-align: center; }
-    .flow b { transform: rotate(90deg); }
 }
 @media (prefers-reduced-motion: reduce) {
     * { scroll-behavior: auto !important; transition: none !important; }

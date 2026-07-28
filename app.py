@@ -67,6 +67,32 @@ async def index(request: Request):
             alias or "",
             "/static/images/food-card-bg.webp",
         )
+    seasonal_top_menus = [
+        {
+            "season": "봄",
+            "emoji": "🌸",
+            "description": "산뜻하고 향긋한 봄 점심",
+            "menus": ["쭈꾸미볶음", "바지락칼국수", "산채비빔밥", "샤브샤브", "연어덮밥"],
+        },
+        {
+            "season": "여름",
+            "emoji": "☀️",
+            "description": "시원한 한 그릇과 든든한 보양식",
+            "menus": ["물냉면", "콩국수", "삼계탕", "물밀면", "회덮밥"],
+        },
+        {
+            "season": "가을",
+            "emoji": "🍂",
+            "description": "구수하고 깊은 제철의 맛",
+            "menus": ["버섯전골", "추어탕", "고등어구이", "들깨칼국수", "장어덮밥"],
+        },
+        {
+            "season": "겨울",
+            "emoji": "❄️",
+            "description": "뜨끈한 국물로 채우는 점심",
+            "menus": ["김치찌개", "감자탕", "부대찌개", "만두전골", "굴국밥"],
+        },
+    ]
     return templates.TemplateResponse(
         request=request,
         name="index.html",
@@ -75,6 +101,7 @@ async def index(request: Request):
             "menu_groups": menu_groups,
             "menu_count": len(MENU_CATALOG),
             "menu_image_map": menu_image_map,
+            "seasonal_top_menus": seasonal_top_menus,
         },
     )
 
