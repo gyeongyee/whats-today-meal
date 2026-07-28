@@ -238,9 +238,9 @@ input:focus, select:focus { border-color: var(--mustard); box-shadow: 0 0 0 4px 
 .seasonal-heading h2 em { white-space: nowrap; }
 .seasonal-heading p { margin: 12px 0 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
 .seasonal-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 13px; }
-.seasonal-grid.monthly-grid { grid-template-columns: minmax(0, 1fr); }
+.seasonal-grid.monthly-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .monthly-card { width: 100%; }
-.monthly-card ol { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.monthly-card ol { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .season-card { padding: 22px; border: 1px solid var(--line); border-radius: 21px; background: #fff; box-shadow: 0 8px 24px rgba(88,57,34,.045); }
 .season-card-heading { display: flex; align-items: center; gap: 12px; min-height: 55px; padding-bottom: 17px; border-bottom: 1px solid var(--line); list-style: none; }
 .season-card-heading::-webkit-details-marker { display: none; }
@@ -253,6 +253,14 @@ input:focus, select:focus { border-color: var(--mustard); box-shadow: 0 0 0 4px 
 .season-card li > span { color: var(--orange-dark); font-size: 11px; font-weight: 900; text-align: center; }
 .season-menu { width: 100%; padding: 10px 12px; border: 0; border-radius: 11px; color: var(--ink); background: rgba(255,255,255,.72); font: inherit; font-size: 13px; font-weight: 800; text-align: left; cursor: pointer; transition: transform .16s ease, color .16s ease, background .16s ease; }
 .season-menu:hover, .season-menu:focus-visible { color: #28200d; background: var(--mustard); transform: translateX(2px); outline: none; }
+.situation-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 17px; }
+.situation-tab { padding: 8px 10px; border: 1px solid var(--line); border-radius: 99px; color: var(--muted); background: #fff; cursor: pointer; font-size: 11px; font-weight: 800; }
+.situation-tab.active { color: #28200d; border-color: var(--mustard); background: var(--mustard); }
+.situation-panel { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; margin-top: 12px; }
+.situation-menu { min-height: 58px; display: flex; align-items: center; gap: 8px; }
+.situation-menu span { display: grid; flex: 0 0 auto; width: 22px; height: 22px; place-items: center; border-radius: 50%; color: var(--mustard-dark); background: var(--mustard-soft); font-size: 10px; font-weight: 900; }
+.situation-menu strong { font-size: 12px; }
+.situation-menu:hover span, .situation-menu:focus-visible span { color: #28200d; background: rgba(255,255,255,.65); }
 .season-card-heading .season-emoji { background: var(--mustard-soft); }
 .catalog-section { padding-block: 90px; border-bottom: 1px solid var(--line); background: #fff; }
 .catalog-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 30px; }
@@ -326,7 +334,7 @@ footer p { margin: 8px 0 0; font-size: 11px; line-height: 1.6; }
     .history-grid, .card-grid, .member-meals, .preference-groups { grid-template-columns: 1fr; }
     .menu-card { min-height: 0; }
     .seasonal-grid { grid-template-columns: 1fr 1fr; }
-    .monthly-card ol { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    .monthly-card ol { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .catalog-groups { grid-template-columns: repeat(2, 1fr); }
     .timeline { grid-template-columns: 1fr; }
     .results-heading { align-items: flex-start; flex-direction: column; }
@@ -370,7 +378,10 @@ footer p { margin: 8px 0 0; font-size: 11px; line-height: 1.6; }
     .seasonal-section { padding-block: 58px; }
     .seasonal-heading { margin-bottom: 24px; }
     .seasonal-grid { grid-template-columns: 1fr; }
+    .seasonal-grid.monthly-grid { grid-template-columns: 1fr; }
     .monthly-card ol { grid-template-columns: 1fr; }
+    .situation-tabs { margin-top: 12px; }
+    .situation-panel { grid-template-columns: 1fr; }
     .season-card { padding: 14px 16px; }
     .season-card-heading { min-height: 44px; padding-bottom: 0; border-bottom: 0; cursor: pointer; }
     .season-card[open] .season-card-heading { padding-bottom: 12px; border-bottom: 1px solid var(--line); }

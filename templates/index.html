@@ -190,6 +190,30 @@
                         {% endfor %}
                     </ol>
                 </details>
+                <details class="season-card situation-card" open>
+                    <summary class="season-card-heading">
+                        <span class="season-emoji" aria-hidden="true">💡</span>
+                        <div><h3>이럴 땐 이 메뉴</h3><p>오늘 상황에 어울리는 든든한 선택</p></div>
+                        <span class="season-toggle" aria-hidden="true"></span>
+                    </summary>
+                    <div class="situation-tabs" role="tablist" aria-label="상황 선택">
+                        {% for item in situation_recommendations %}
+                        <button class="situation-tab{% if loop.first %} active{% endif %}" type="button" role="tab" data-situation="{{ item.id }}" aria-selected="{{ 'true' if loop.first else 'false' }}">
+                            {{ item.emoji }} {{ item.label }}
+                        </button>
+                        {% endfor %}
+                    </div>
+                    {% for item in situation_recommendations %}
+                    <div class="situation-panel{% if not loop.first %} hidden{% endif %}" data-situation-panel="{{ item.id }}" role="tabpanel">
+                        {% for menu in item.menus %}
+                        <button class="season-menu situation-menu" type="button" data-menu="{{ menu }}" aria-label="{{ item.label }} 추천 {{ menu }} 상세 정보 보기">
+                            <span>{{ loop.index }}</span>
+                            <strong>{{ menu }}</strong>
+                        </button>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </details>
             </div>
         </div>
     </section>
@@ -248,6 +272,6 @@
         "menuImages": menu_image_map
     } | tojson }};
 </script>
-    <script src="{{ url_for('static', path='/app.js') }}?v=17" defer></script>
+    <script src="{{ url_for('static', path='/app.js') }}?v=18" defer></script>
 </body>
 </html>

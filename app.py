@@ -98,6 +98,32 @@ async def index(request: Request):
         "description": "이달의 날씨와 계절감을 반영한 점심 메뉴",
         "menus": monthly_menus[current_month],
     }
+    situation_recommendations = [
+        {
+            "id": "rainy",
+            "label": "비 오는 날",
+            "emoji": "🌧️",
+            "menus": ["바지락칼국수", "수제비", "김치찌개"],
+        },
+        {
+            "id": "tired",
+            "label": "힘든 날",
+            "emoji": "💪",
+            "menus": ["제육볶음", "닭갈비", "갈비탕"],
+        },
+        {
+            "id": "dinner",
+            "label": "회식",
+            "emoji": "🍻",
+            "menus": ["보쌈", "족발", "곱창전골"],
+        },
+        {
+            "id": "hangover",
+            "label": "해장",
+            "emoji": "🥣",
+            "menus": ["뼈해장국", "콩나물국밥", "황태해장국"],
+        },
+    ]
     return templates.TemplateResponse(
         request=request,
         name="index.html",
@@ -107,6 +133,7 @@ async def index(request: Request):
             "menu_count": len(MENU_CATALOG),
             "menu_image_map": menu_image_map,
             "monthly_recommendation": monthly_recommendation,
+            "situation_recommendations": situation_recommendations,
         },
     )
 

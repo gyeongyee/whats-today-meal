@@ -23,7 +23,12 @@ def test_home_and_static_assets_are_served():
     assert f"{current_month}월의 추천 메뉴" in home.text
     assert "HOW IT WORKS" not in home.text
     assert home.text.count('class="season-menu"') == 5
+    assert home.text.count('class="season-menu situation-menu"') == 12
     assert f"{current_month}월 추천" in home.text
+    assert "비 오는 날" in home.text and "바지락칼국수" in home.text
+    assert "힘든 날" in home.text and "제육볶음" in home.text
+    assert "회식" in home.text and "보쌈" in home.text
+    assert "해장" in home.text and "뼈해장국" in home.text
     assert 'class="catalog-menu"' in home.text
     assert 'id="menuDetailDialog"' in home.text
     assert "점진적으로 메뉴 추가 예정" in home.text
@@ -32,10 +37,11 @@ def test_home_and_static_assets_are_served():
     assert "style.css?v=23" in home.text
     assert 'class="timeline-disclosure"' in home.text
     assert 'media="(prefers-color-scheme: dark)"' in home.text
-    assert "app.js?v=17" in home.text
+    assert "app.js?v=18" in home.text
     assert home.text.count('value="매운맛"') == 1
     assert home.text.count('id="avoidSpicy"') == 1
     assert home.text.count('class="season-card monthly-card"') == 1
+    assert home.text.count('class="season-card situation-card"') == 1
     assert home.text.count('class="catalog-group"') >= 5
     assert client.get("/static/images/menus/tofu-rice-bowl.png").status_code == 200
     assert client.get("/static/images/menus/vegan-gimbap.png").status_code == 200

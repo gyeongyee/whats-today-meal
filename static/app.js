@@ -654,6 +654,18 @@ $("menuDetailDialog").addEventListener("click", (event) => {
 document.querySelectorAll(".catalog-menu, .season-menu").forEach((button) => {
     button.addEventListener("click", () => openMenuDetails(button.dataset.menu));
 });
+document.querySelectorAll(".situation-tab").forEach((button) => {
+    button.addEventListener("click", () => {
+        document.querySelectorAll(".situation-tab").forEach((tab) => {
+            const selected = tab === button;
+            tab.classList.toggle("active", selected);
+            tab.setAttribute("aria-selected", String(selected));
+        });
+        document.querySelectorAll("[data-situation-panel]").forEach((panel) => {
+            panel.classList.toggle("hidden", panel.dataset.situationPanel !== button.dataset.situation);
+        });
+    });
+});
 ["yesterday", "twoDaysAgo", "threeDaysAgo"].forEach((id) => {
     $(id).addEventListener("change", saveRecentInputs);
 });
