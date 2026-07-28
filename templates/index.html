@@ -6,7 +6,7 @@
     <meta name="description" content="회사 동료들의 최근 3일 식사를 분석해 모두에게 새로운 점심 메뉴를 추천합니다.">
     <meta name="theme-color" content="#ff5c35">
     <title>오늘 뭐 먹지 AI — 점심 고민을 30초 만에</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=15">
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=16">
 </head>
 <body>
 <header class="site-header">
@@ -200,10 +200,13 @@
             </div>
             <div class="catalog-groups">
                 {% for cuisine, menus in menu_groups.items() %}
-                <article class="catalog-group">
-                    <h3>{{ cuisine }} <small>{{ menus | length }}</small></h3>
+                <details class="catalog-group">
+                    <summary class="catalog-group-heading">
+                        <h3>{{ cuisine }} <small>{{ menus | length }}</small></h3>
+                        <span class="catalog-toggle" aria-hidden="true"></span>
+                    </summary>
                     <p>{% for menu in menus %}<button class="catalog-menu" type="button" data-menu="{{ menu }}" aria-label="{{ menu }} 상세 정보 보기">{{ menu }}</button>{% endfor %}</p>
-                </article>
+                </details>
                 {% endfor %}
             </div>
         </div>

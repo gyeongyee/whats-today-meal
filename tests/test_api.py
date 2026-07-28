@@ -27,9 +27,10 @@ def test_home_and_static_assets_are_served():
     assert "점진적으로 메뉴 추가 예정" in home.text
     assert client.get("/static/app.js").status_code == 200
     assert client.get("/static/style.css").status_code == 200
-    assert "style.css?v=15" in home.text
+    assert "style.css?v=16" in home.text
     assert "app.js?v=14" in home.text
     assert home.text.count('class="season-card season-') == 4
+    assert home.text.count('class="catalog-group"') >= 5
     assert client.get("/static/images/menus/tofu-rice-bowl.png").status_code == 200
     assert client.get("/static/images/menus/vegan-gimbap.png").status_code == 200
     assert home.text.count("/static/images/generated/menu-") == 267
