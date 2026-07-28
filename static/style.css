@@ -9,7 +9,7 @@
     --orange-dark: #e74620;
     --yellow: #ffd85a;
     --green: #3e7352;
-    --line: #e9dfd2;
+    --line: #dedbd7;
     --shadow: 0 18px 60px rgba(88, 57, 34, .09);
     --radius: 24px;
 }
@@ -185,7 +185,13 @@ input:focus, select:focus { border-color: var(--orange); box-shadow: 0 0 0 4px r
 .choose-button { background: var(--ink); color: white; }
 .relax-button { display: block; margin: 24px auto 0; padding: 11px 17px; border: 1px solid #5c534d; border-radius: 99px; color: #e5ddd7; background: transparent; cursor: pointer; }
 
-.timeline-section { padding-block: 90px; }
+.timeline-section {
+    margin-block: 64px;
+    padding: 34px clamp(22px, 4vw, 44px);
+    border: 1px solid var(--line);
+    border-radius: 26px;
+    box-shadow: 0 10px 34px rgba(88,57,34,.05);
+}
 
 .section-title-row { display: flex; justify-content: space-between; gap: 20px; align-items: flex-start; }
 .text-button { border: 0; padding: 4px; background: transparent; color: var(--muted); text-decoration: underline; cursor: pointer; font-size: 12px; }
@@ -207,13 +213,13 @@ input:focus, select:focus { border-color: var(--orange); box-shadow: 0 0 0 4px r
 .small-button.ghost { background: #efe9e2; color: var(--muted); }
 .empty-state { margin: 0; padding: 28px; border: 1px dashed var(--line); border-radius: 16px; color: var(--muted); text-align: center; font-size: 13px; }
 
-.seasonal-section { padding-block: 100px; background: #fff; }
+.seasonal-section { padding-block: 100px; border-block: 1px solid var(--line); background: #fff; }
 .seasonal-heading { margin-bottom: 42px; }
 .seasonal-heading h2 { max-width: none; margin: 0; white-space: nowrap; font-size: clamp(32px, 4.4vw, 52px); letter-spacing: -.055em; }
 .seasonal-heading h2 em { white-space: nowrap; }
 .seasonal-heading p { margin: 12px 0 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
 .seasonal-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 13px; }
-.season-card { padding: 22px; border: 1px solid rgba(255,255,255,.85); border-radius: 21px; background: rgba(255,255,255,.62); }
+.season-card { padding: 22px; border: 1px solid var(--line); border-radius: 21px; background: #fff; box-shadow: 0 8px 24px rgba(88,57,34,.045); }
 .season-card-heading { display: flex; align-items: center; gap: 12px; min-height: 55px; padding-bottom: 17px; border-bottom: 1px solid var(--line); list-style: none; }
 .season-card-heading::-webkit-details-marker { display: none; }
 .season-card-heading .season-emoji { display: grid; flex: 0 0 auto; width: 42px; height: 42px; place-items: center; border-radius: 14px; background: #fff; font-size: 23px; }
@@ -227,13 +233,13 @@ input:focus, select:focus { border-color: var(--orange); box-shadow: 0 0 0 4px r
 .season-menu:hover, .season-menu:focus-visible { color: #fff; background: var(--orange-dark); transform: translateX(2px); outline: none; }
 .season-여름 .season-emoji { background: #fff2c9; }
 .season-겨울 .season-emoji { background: #e8f2f5; }
-.catalog-section { padding-block: 90px; background: #fff; }
+.catalog-section { padding-block: 90px; border-bottom: 1px solid var(--line); background: #fff; }
 .catalog-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 30px; }
 .catalog-heading h2 { margin: 0; font-size: clamp(28px, 4vw, 42px); letter-spacing: -.05em; }
 .catalog-heading p:not(.eyebrow) { margin: 9px 0 0; color: var(--muted); font-size: 13px; }
 .catalog-heading > span { flex: 0 0 auto; padding: 9px 12px; border-radius: 99px; color: var(--green); background: #eaf3e8; font-size: 11px; font-weight: 900; }
 .catalog-groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-.catalog-group { padding: 17px; border: 1px solid var(--line); border-radius: 17px; background: rgba(255,255,255,.74); }
+.catalog-group { padding: 17px; border: 1px solid var(--line); border-radius: 17px; background: #fff; box-shadow: 0 6px 18px rgba(88,57,34,.04); }
 .catalog-group-heading { display: flex; align-items: center; gap: 12px; list-style: none; cursor: pointer; }
 .catalog-group-heading::-webkit-details-marker { display: none; }
 .catalog-group h3 { margin: 0; font-size: 15px; }
@@ -337,7 +343,7 @@ footer p { margin: 8px 0 0; font-size: 11px; line-height: 1.6; }
     .input-help { margin-top: 9px; font-size: 13px; }
     .results-section { padding-block: 60px; }
     .menu-card { padding: 16px; }
-    .timeline-section { padding-block: 52px; }
+    .timeline-section { margin-block: 38px; padding: 22px 14px; border-radius: 20px; }
     .seasonal-heading h2 { white-space: normal; font-size: 36px; }
     .seasonal-section { padding-block: 58px; }
     .seasonal-heading { margin-bottom: 24px; }
