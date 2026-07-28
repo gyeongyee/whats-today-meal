@@ -238,6 +238,10 @@ const LOCAL_MENU_IMAGES = {
 };
 
 async function findExactMenuImage(menu) {
+    const generatedImage = window.APP_CONFIG?.menuImages?.[menu];
+    if (generatedImage) {
+        return {src: generatedImage, page: ""};
+    }
     if (LOCAL_MENU_IMAGES[menu]) {
         return {src: LOCAL_MENU_IMAGES[menu], page: ""};
     }

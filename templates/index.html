@@ -6,7 +6,7 @@
     <meta name="description" content="회사 동료들의 최근 3일 식사를 분석해 모두에게 새로운 점심 메뉴를 추천합니다.">
     <meta name="theme-color" content="#ff5c35">
     <title>오늘 뭐 먹지 AI — 점심 고민을 30초 만에</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=8">
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=9">
 </head>
 <body>
 <header class="site-header">
@@ -216,8 +216,11 @@
 
 <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 <script>
-    window.APP_CONFIG = {{ {"aiConfigured": ai_configured} | tojson }};
+    window.APP_CONFIG = {{ {
+        "aiConfigured": ai_configured,
+        "menuImages": menu_image_map
+    } | tojson }};
 </script>
-<script src="{{ url_for('static', path='/app.js') }}?v=9" defer></script>
+<script src="{{ url_for('static', path='/app.js') }}?v=11" defer></script>
 </body>
 </html>

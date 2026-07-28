@@ -31,6 +31,10 @@ async def index(request: Request):
     menu_groups: dict[str, list[str]] = {}
     for menu in MENU_CATALOG:
         menu_groups.setdefault(menu["cuisine"], []).append(menu["name"])
+    menu_image_map = {
+        menu["name"]: f"/static/images/generated/menu-{index:03d}.jpg"
+        for index, menu in enumerate(MENU_CATALOG, start=1)
+    }
     return templates.TemplateResponse(
         request=request,
         name="index.html",
@@ -38,6 +42,7 @@ async def index(request: Request):
             "ai_configured": ai_service.configured,
             "menu_groups": menu_groups,
             "menu_count": len(MENU_CATALOG),
+            "menu_image_map": menu_image_map,
         },
     )
 

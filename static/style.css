@@ -143,7 +143,7 @@ input:focus, select:focus { border-color: var(--orange); box-shadow: 0 0 0 4px r
 .menu-card-top { display: flex; justify-content: space-between; align-items: center; }
 .menu-number { font-family: "Gowun Dodum", sans-serif; color: var(--orange); font-size: 26px; font-weight: 900; }
 .match { color: var(--green); background: #eaf3e8; border-radius: 99px; padding: 6px 9px; font-size: 11px; font-weight: 800; }
-.menu-visual { position: relative; height: 150px; margin: 15px 0 17px; border-radius: 16px; overflow: hidden; background: #eee3d6; }
+.menu-visual { position: relative; width: 100%; aspect-ratio: 4 / 3; height: auto; margin: 15px 0 17px; border-radius: 16px; overflow: hidden; background: #eee3d6; }
 .menu-visual img { width: 100%; height: 100%; object-fit: cover; opacity: .56; filter: saturate(.8); transition: opacity .2s, filter .2s; }
 .menu-visual.has-photo img { object-position: center center; opacity: 1; filter: none; }
 .menu-visual > span {
@@ -215,10 +215,10 @@ input:focus, select:focus { border-color: var(--orange); box-shadow: 0 0 0 4px r
 .catalog-group p { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; }
 .catalog-menu { padding: 6px 8px; border: 0; border-radius: 9px; color: #655d57; background: #f3ede6; font: inherit; font-size: 10px; cursor: pointer; transition: transform .16s ease, color .16s ease, background .16s ease; }
 .catalog-menu:hover, .catalog-menu:focus-visible { color: #fff; background: var(--orange-dark); transform: translateY(-1px); outline: none; }
-.menu-detail-dialog { width: min(440px, calc(100% - 28px)); padding: 0 0 24px; overflow: hidden; border: 0; border-radius: 24px; color: var(--ink); background: #fffdf9; box-shadow: 0 28px 80px rgba(54,34,20,.28); }
+.menu-detail-dialog { width: min(440px, calc(100% - 28px)); max-height: calc(100dvh - 28px); padding: 0 0 24px; overflow-x: hidden; overflow-y: auto; border: 0; border-radius: 24px; color: var(--ink); background: #fffdf9; box-shadow: 0 28px 80px rgba(54,34,20,.28); }
 .menu-detail-dialog::backdrop { background: rgba(34,25,20,.55); backdrop-filter: blur(4px); }
 .dialog-close { position: absolute; z-index: 3; top: 13px; right: 13px; width: 36px; height: 36px; border: 0; border-radius: 50%; color: #3b3029; background: rgba(255,255,255,.9); font-size: 25px; line-height: 1; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,.14); }
-.menu-detail-visual { position: relative; height: 230px; overflow: hidden; display: grid; place-items: center; background: #f5e9dd; }
+.menu-detail-visual { position: relative; width: 100%; aspect-ratio: 4 / 3; height: auto; overflow: hidden; display: grid; place-items: center; background: #f5e9dd; }
 .menu-detail-visual img { width: 100%; height: 100%; object-fit: cover; opacity: .22; }
 .menu-detail-visual > span { position: absolute; font-size: 70px; filter: drop-shadow(0 8px 14px rgba(0,0,0,.15)); }
 .menu-detail-visual.has-photo img { object-position: center center; opacity: 1; }
