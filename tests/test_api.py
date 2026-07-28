@@ -9,10 +9,12 @@ def test_home_and_static_assets_are_served():
     home = client.get("/")
     assert home.status_code == 200
     assert "오늘 뭐 먹지 AI" in home.text
-    assert "지금 만날 수 있는 118가지 메뉴" in home.text
+    assert "지금 만날 수 있는 268가지 메뉴" in home.text
     assert "아무것도 선택하지 않아도 정상 작동합니다." in home.text
     assert 'value="다이어트"' in home.text
     assert 'value="비건"' in home.text
+    assert 'value="시원한 국물"' in home.text
+    assert 'value="보양식"' in home.text
     assert 'class="catalog-menu"' in home.text
     assert 'id="menuDetailDialog"' in home.text
     assert "점진적으로 메뉴 추가 예정" in home.text
@@ -20,7 +22,7 @@ def test_home_and_static_assets_are_served():
     assert client.get("/static/style.css").status_code == 200
     assert client.get("/static/images/menus/tofu-rice-bowl.png").status_code == 200
     assert client.get("/static/images/menus/vegan-gimbap.png").status_code == 200
-    assert home.text.count("/static/images/generated/menu-") == 118
+    assert home.text.count("/static/images/generated/menu-") == 268
     for index in (1, 22, 46, 118):
         assert client.get(f"/static/images/generated/menu-{index:03d}.jpg").status_code == 200
 

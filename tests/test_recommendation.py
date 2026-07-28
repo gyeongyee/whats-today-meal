@@ -125,7 +125,8 @@ def test_new_diverse_menus_include_burrito():
 
     by_name = {menu["name"]: menu for menu in MENU_CATALOG}
     assert "부리또" in by_name
-    assert len(MENU_CATALOG) == 118
+    assert len(MENU_CATALOG) == 268
+    assert len({menu["name"] for menu in MENU_CATALOG}) == 268
     assert by_name["카레"]["cuisine"] == "일식"
     assert by_name["난과 커리"]["cuisine"] == "인도"
     assert by_name["로코모코"]["cuisine"] == "양식"
@@ -140,6 +141,54 @@ def test_new_diverse_menus_include_burrito():
         "나시고렝", "똠얌꿍", "태국커리", "카오팟",
     }
     assert all(by_name[name]["cuisine"] == "동남아" for name in southeast_asian)
+
+
+def test_expanded_lunch_menus_are_deduplicated_and_classified():
+    from menu_data import MENU_CATALOG
+
+    by_name = {menu["name"]: menu for menu in MENU_CATALOG}
+    assert by_name["소머리국밥"]["cuisine"] == "한식"
+    assert by_name["소머리국밥"]["kind"] == "국밥"
+    assert by_name["삼선짬뽕"]["cuisine"] == "중식"
+    assert by_name["모둠초밥"]["cuisine"] == "일식"
+    assert by_name["쌀국수"]["cuisine"] == "동남아"
+    assert by_name["돈가스김밥"]["cuisine"] == "한식"
+    assert by_name["카레라이스"]["kind"] == "덮밥"
+    assert by_name["돈부리"]["kind"] == "덮밥"
+    assert "국물" not in by_name["탕수육 정식"]["tags"]
+
+
+def test_cool_soup_filter_returns_summer_soup_menus():
+    from menu_data import MENU_CATALOG
+
+    by_name = {menu["name"]: menu for menu in MENU_CATALOG}
+    result = asyncio.run(
+        make_engine().recommend(
+            RecommendRequest(preferred_tags=["시원한 국물"])
+        )
+    )
+    assert len(result.recommendations) == 3
+    assert all(
+        "시원한 국물" in by_name[item.menu]["tags"]
+        for item in result.recommendations
+    )
+
+
+def test_restorative_filter_includes_baeksuk_and_samgyetang_family():
+    from menu_data import MENU_CATALOG
+
+    by_name = {menu["name"]: menu for menu in MENU_CATALOG}
+    assert "보양식" in by_name["백숙"]["tags"]
+    assert "보양식" in by_name["삼계탕"]["tags"]
+    assert "보양식" in by_name["반계탕"]["tags"]
+
+    result = asyncio.run(
+        make_engine().recommend(
+            RecommendRequest(preferred_tags=["보양식"])
+        )
+    )
+    assert len(result.recommendations) == 3
+    assert all("보양식" in by_name[item.menu]["tags"] for item in result.recommendations)
 
 
 def test_requested_korean_and_chinese_menus_are_classified():

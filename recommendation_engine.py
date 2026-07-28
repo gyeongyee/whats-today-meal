@@ -38,6 +38,10 @@ class RecommendationEngine:
             score += min(36, 13 * len(tags & set(request.preferred_tags)))
         if "다이어트" in request.preferred_tags:
             score += 55 if "다이어트" in tags else -18
+        if "시원한 국물" in request.preferred_tags:
+            score += 55 if "시원한 국물" in tags else -18
+        if "보양식" in request.preferred_tags:
+            score += 55 if "보양식" in tags else -18
         if request.preferred_cuisines:
             cuisine_groups = {
                 "한식": {"한식", "분식"},
@@ -166,15 +170,20 @@ class RecommendationEngine:
             tags = set(menu["tags"])
             wants_vegan = "비건" in request.preferred_tags
             wants_diet = "다이어트" in request.preferred_tags
+            focused_tags = {
+                "다이어트",
+                "시원한 국물",
+                "보양식",
+            } & set(request.preferred_tags)
             if wants_vegan and "비건" not in tags:
                 continue
             # 다이어트만 고르면 지정된 후보로 좁히고, 비건과 함께 고르면
             # 비건 후보 안에서 다이어트 적합도를 우선한다.
             if (
-                wants_diet
+                focused_tags
                 and not wants_vegan
                 and request.mode == "strict"
-                and "다이어트" not in tags
+                and not focused_tags & tags
             ):
                 continue
             candidate = profile_of(menu)

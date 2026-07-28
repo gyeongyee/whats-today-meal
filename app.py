@@ -10,6 +10,7 @@ from fastapi.templating import Jinja2Templates
 
 from ai_service import AISemanticService
 from menu_data import MENU_CATALOG
+from menu_expansion import image_alias_for
 from models import RecommendRequest, RecommendResponse
 from recommendation_engine import RecommendationEngine
 
@@ -31,10 +32,41 @@ async def index(request: Request):
     menu_groups: dict[str, list[str]] = {}
     for menu in MENU_CATALOG:
         menu_groups.setdefault(menu["cuisine"], []).append(menu["name"])
-    menu_image_map = {
+    generated_image_count = 118
+    base_image_map = {
         menu["name"]: f"/static/images/generated/menu-{index:03d}.jpg"
-        for index, menu in enumerate(MENU_CATALOG, start=1)
+        for index, menu in enumerate(
+            MENU_CATALOG[:generated_image_count],
+            start=1,
+        )
     }
+    fallback_by_kind = {
+        "국밥": "돼지국밥",
+        "탕": "갈비탕",
+        "찌개": "김치찌개",
+        "전골": "샤브샤브",
+        "면": "잔치국수",
+        "덮밥": "비빔밥",
+        "볶음밥": "볶음밥",
+        "볶음": "제육볶음",
+        "구이": "생선구이",
+        "정식": "쌈밥",
+        "분식": "김밥",
+        "튀김": "돈가스",
+        "간편식": "김밥",
+        "초밥": "초밥",
+    }
+    menu_image_map: dict[str, str] = {}
+    for menu in MENU_CATALOG:
+        direct_image = base_image_map.get(menu["name"])
+        if direct_image:
+            menu_image_map[menu["name"]] = direct_image
+            continue
+        alias = image_alias_for(menu["name"]) or fallback_by_kind.get(menu["kind"])
+        menu_image_map[menu["name"]] = base_image_map.get(
+            alias or "",
+            "/static/images/food-card-bg.webp",
+        )
     return templates.TemplateResponse(
         request=request,
         name="index.html",

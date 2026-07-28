@@ -131,6 +131,10 @@ MENU_CATALOG: list[Menu] = [
     {"name": "비건 김밥", "cuisine": "한식", "kind": "간편식", "tags": ["밥", "채소", "가벼움", "빠름", "비건"]},
 ]
 
+from menu_expansion import expand_menu_catalog
+
+MENU_CATALOG = expand_menu_catalog(MENU_CATALOG)
+
 ALIASES = {
     "돈까스": "돈가스",
     "김치찌게": "김치찌개",
