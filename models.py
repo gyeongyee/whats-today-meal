@@ -34,6 +34,7 @@ class RecommendRequest(BaseModel):
     prefer_share: bool = False
     preferred_cuisines: list[str] = Field(default_factory=list, max_length=5)
     preferred_tags: list[str] = Field(default_factory=list, max_length=10)
+    previous_recommendations: list[str] = Field(default_factory=list, max_length=3)
     retry_count: int = Field(default=0, ge=0, le=20)
     team_members: list[TeamMemberMeals] = Field(default_factory=list, max_length=9)
 

@@ -42,6 +42,60 @@ def test_relaxed_mode_still_excludes_exact_yesterday_menu():
     assert result.relax_level == 2
 
 
+def test_relaxed_retry_excludes_all_three_previous_recommendations():
+    engine = make_engine()
+    first = asyncio.run(
+        engine.recommend(
+            RecommendRequest(
+                yesterday="김치찌개",
+                two_days_ago="돈가스",
+                three_days_ago="짜장면",
+            )
+        )
+    )
+    previous = [item.menu for item in first.recommendations]
+
+    retried = asyncio.run(
+        engine.recommend(
+            RecommendRequest(
+                yesterday="김치찌개",
+                two_days_ago="돈가스",
+                three_days_ago="짜장면",
+                mode="relaxed",
+                retry_count=1,
+                previous_recommendations=previous,
+            )
+        )
+    )
+
+    assert len(retried.recommendations) == 3
+    assert not {item.menu for item in retried.recommendations} & set(previous)
+
+
+def test_relaxed_diet_retry_can_expand_beyond_four_diet_candidates():
+    engine = make_engine()
+    first = asyncio.run(
+        engine.recommend(
+            RecommendRequest(preferred_tags=["다이어트"])
+        )
+    )
+    previous = [item.menu for item in first.recommendations]
+
+    retried = asyncio.run(
+        engine.recommend(
+            RecommendRequest(
+                preferred_tags=["다이어트"],
+                previous_recommendations=previous,
+                mode="relaxed",
+                retry_count=1,
+            )
+        )
+    )
+
+    assert len(retried.recommendations) == 3
+    assert not {item.menu for item in retried.recommendations} & set(previous)
+
+
 def test_spicy_items_are_avoided_when_requested():
     result = asyncio.run(
         make_engine().recommend(RecommendRequest(avoid_spicy=True))

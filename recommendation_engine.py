@@ -157,9 +157,12 @@ class RecommendationEngine:
             for field in ("yesterday", "two_days_ago", "three_days_ago")
         ]
         histories_by_day = [profiles_of(day) for day in history_text]
+        previous_recommendations = set(request.previous_recommendations)
 
         local_ranked: list[tuple[float, Menu, list[float]]] = []
         for menu in MENU_CATALOG:
+            if menu["name"] in previous_recommendations:
+                continue
             tags = set(menu["tags"])
             wants_vegan = "비건" in request.preferred_tags
             wants_diet = "다이어트" in request.preferred_tags
@@ -167,7 +170,12 @@ class RecommendationEngine:
                 continue
             # 다이어트만 고르면 지정된 후보로 좁히고, 비건과 함께 고르면
             # 비건 후보 안에서 다이어트 적합도를 우선한다.
-            if wants_diet and not wants_vegan and "다이어트" not in tags:
+            if (
+                wants_diet
+                and not wants_vegan
+                and request.mode == "strict"
+                and "다이어트" not in tags
+            ):
                 continue
             candidate = profile_of(menu)
             similarities = [

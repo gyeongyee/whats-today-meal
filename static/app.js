@@ -2,7 +2,12 @@
 
 const STORAGE_KEY = "lunchMenuAI.v2";
 const LEGACY_KEY = "lunchHistory";
-const state = {retryCount: 0, selectedMenu: "", toastTimer: null};
+const state = {
+    retryCount: 0,
+    selectedMenu: "",
+    lastRecommendations: [],
+    toastTimer: null,
+};
 const $ = (id) => document.getElementById(id);
 
 function localDate(offset = 0) {
@@ -359,6 +364,8 @@ async function getRecommendations(mode = "strict") {
         prefer_share: $("preferShare").checked,
         preferred_cuisines: checkedValues(".cuisine-filter"),
         preferred_tags: checkedValues(".tag-filter"),
+        previous_recommendations:
+            mode === "relaxed" ? state.lastRecommendations : [],
         retry_count: state.retryCount,
         team_members: teamMembers,
     };
@@ -432,11 +439,12 @@ async function openMenuDetails(menu) {
 }
 
 function renderRecommendations(data) {
+    state.lastRecommendations = data.recommendations.map((item) => item.menu);
     $("recommendSection").classList.remove("hidden");
     const groupLabel = data.participant_count > 1 ? `${data.participant_count}명의 ` : "";
     $("modeDescription").textContent = data.mode === "strict"
         ? `${groupLabel}최근 3일과 의미가 겹치는 메뉴를 낮은 순위로 조정했어요.`
-        : `완화 ${data.relax_level}단계 · ${groupLabel}어제와 같은 메뉴는 계속 제외했어요.`;
+        : `완화 ${data.relax_level}단계 · 방금 추천한 3개와 ${groupLabel}어제 메뉴를 제외했어요.`;
     $("engineBadge").textContent = `✦ ${data.engine_label}`;
     const container = $("recommendations");
     container.replaceChildren();
@@ -606,6 +614,7 @@ function clearHistory() {
 
 $("recommendBtn").addEventListener("click", () => {
     state.retryCount = 0;
+    state.lastRecommendations = [];
     getRecommendations("strict");
 });
 $("relaxBtn").addEventListener("click", () => {
