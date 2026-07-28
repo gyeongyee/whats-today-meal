@@ -52,6 +52,7 @@ button { color: inherit; }
 .privacy-chip { color: var(--mustard-dark); background: var(--mustard-soft); border-radius: 99px; padding: 8px 13px; font-size: 12px; font-weight: 700; }
 
 .hero { min-height: 235px; display: grid; grid-template-columns: 1.35fr .65fr; align-items: center; gap: 34px; padding-block: 20px 28px; }
+.hero > div:first-child { padding-left: 2cm; }
 .eyebrow { margin: 0 0 14px; color: var(--orange-dark); font-weight: 900; font-size: 13px; letter-spacing: .12em; }
 .hero .eyebrow { margin-bottom: 8px; font-size: 11px; letter-spacing: .08em; }
 .hero h1 { margin: 0; font-size: clamp(36px, 4.4vw, 52px); line-height: 1.13; letter-spacing: -.055em; }
@@ -426,6 +427,9 @@ footer p { margin: 8px 0 0; font-size: 11px; line-height: 1.6; }
     .timeline-row { grid-template-columns: 1fr auto auto; }
     .timeline-row time { grid-column: 1 / -1; }
     .section-title-row { flex-direction: column; }
+}
+@media (max-width: 360px) {
+    .hero > div:first-child { padding-left: 1cm; }
 }
 @media (prefers-reduced-motion: reduce) {
     * { scroll-behavior: auto !important; transition: none !important; }
