@@ -11,6 +11,10 @@ def test_home_and_static_assets_are_served():
     home = client.get("/")
     current_month = datetime.now(timezone(timedelta(hours=9))).month
     assert home.status_code == 200
+    assert 'class="hero shell"' in home.text
+    assert "고민은 짧게" in home.text
+    assert "점심은 맛있게" in home.text
+    assert "어제와는 다르게" not in home.text
     assert "오늘 뭐 먹지 AI" in home.text
     assert "지금 만날 수 있는 270가지 메뉴" in home.text
     assert "아무것도 선택하지 않아도 정상 작동합니다." in home.text
@@ -34,7 +38,7 @@ def test_home_and_static_assets_are_served():
     assert "점진적으로 메뉴 추가 예정" in home.text
     assert client.get("/static/app.js").status_code == 200
     assert client.get("/static/style.css").status_code == 200
-    assert "style.css?v=23" in home.text
+    assert "style.css?v=24" in home.text
     assert 'class="timeline-disclosure"' in home.text
     assert 'media="(prefers-color-scheme: dark)"' in home.text
     assert "app.js?v=18" in home.text
