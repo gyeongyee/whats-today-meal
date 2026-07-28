@@ -1,8 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap");
 
 :root {
-    --cream: #fffaf1;
-    --paper: #fffefb;
+    --cream: #ffffff;
+    --paper: #ffffff;
     --ink: #28231f;
     --muted: #766f68;
     --orange: #ff5c35;
@@ -127,7 +127,7 @@ input:focus, select:focus { border-color: var(--orange); box-shadow: 0 0 0 4px r
 }
 .preference input:checked + span { color: var(--orange-dark); border-color: var(--orange); background: #fff2ec; box-shadow: 0 0 0 2px rgba(255,92,53,.08); }
 .preference-groups { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 22px; }
-.filter-group { min-width: 0; margin: 0; padding: 16px; border: 1px solid var(--line); border-radius: 17px; background: #fffaf5; }
+.filter-group { min-width: 0; margin: 0; padding: 16px; border: 1px solid var(--line); border-radius: 17px; background: #fff; }
 .filter-group legend { padding: 0 7px; font-size: 13px; font-weight: 900; }
 .filter-chips { display: flex; flex-wrap: wrap; gap: 7px; }
 .filter-chips span {
@@ -207,7 +207,7 @@ input:focus, select:focus { border-color: var(--orange); box-shadow: 0 0 0 4px r
 .small-button.ghost { background: #efe9e2; color: var(--muted); }
 .empty-state { margin: 0; padding: 28px; border: 1px dashed var(--line); border-radius: 16px; color: var(--muted); text-align: center; font-size: 13px; }
 
-.seasonal-section { padding-block: 100px; background: #f3e9dc; }
+.seasonal-section { padding-block: 100px; background: #fff; }
 .seasonal-heading { margin-bottom: 42px; }
 .seasonal-heading h2 { max-width: none; margin: 0; white-space: nowrap; font-size: clamp(32px, 4.4vw, 52px); letter-spacing: -.055em; }
 .seasonal-heading h2 em { white-space: nowrap; }
@@ -227,7 +227,7 @@ input:focus, select:focus { border-color: var(--orange); box-shadow: 0 0 0 4px r
 .season-menu:hover, .season-menu:focus-visible { color: #fff; background: var(--orange-dark); transform: translateX(2px); outline: none; }
 .season-여름 .season-emoji { background: #fff2c9; }
 .season-겨울 .season-emoji { background: #e8f2f5; }
-.catalog-section { padding-block: 90px; background: #fffaf1; }
+.catalog-section { padding-block: 90px; background: #fff; }
 .catalog-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 30px; }
 .catalog-heading h2 { margin: 0; font-size: clamp(28px, 4vw, 42px); letter-spacing: -.05em; }
 .catalog-heading p:not(.eyebrow) { margin: 9px 0 0; color: var(--muted); font-size: 13px; }
@@ -388,4 +388,77 @@ footer p { margin: 8px 0 0; font-size: 11px; line-height: 1.6; }
 }
 @media (prefers-reduced-motion: reduce) {
     * { scroll-behavior: auto !important; transition: none !important; }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark;
+        --cream: #121110;
+        --paper: #1a1816;
+        --ink: #f5f1ed;
+        --muted: #b9b0a8;
+        --green: #92c7a2;
+        --line: #3a3530;
+        --shadow: 0 18px 60px rgba(0,0,0,.28);
+    }
+
+    body { background: var(--cream); }
+    .plate { border-color: #302b27; background: #1d1a18; }
+    .orbit { background: #27231f; }
+    .privacy-chip { color: #a8d8b5; background: #203027; }
+    .workspace,
+    .team-member-card,
+    input,
+    select,
+    .preference span,
+    .filter-chips span,
+    .today-choice.empty {
+        color: var(--ink);
+        background: #201d1a;
+    }
+    .team-block { border-color: #354438; background: #18201a; }
+    .add-member-button { color: var(--green); border-color: #49614f; background: #201d1a; }
+    .filter-group { background: #191715; }
+    .input-help { color: #c1b7af; }
+    .preference input:checked + span {
+        color: #ff9b80;
+        border-color: var(--orange);
+        background: #38221c;
+    }
+    .filter-chips input:checked + span {
+        color: #a8d8b5;
+        border-color: #689676;
+        background: #203027;
+    }
+    .results-section { background: #0d0c0b; }
+    .menu-card { color: var(--ink); background: #211e1b; }
+    .menu-description,
+    .menu-reason { color: #c8beb6; }
+    .menu-calories { color: #ff9b80; background: #3b241d; }
+    .engine-badge { color: #ffe4b3; border-color: #62574f; background: #39332e; }
+    .timeline-section { background: #121110; }
+    .today-choice { border-color: #57372e; background: #32211c; }
+    .person-timeline,
+    .timeline-row { border-color: var(--line); background: #1a1816; }
+    .small-button.ghost { color: #c4bbb4; background: #34302c; }
+    .seasonal-section,
+    .catalog-section { background: #121110; }
+    .season-card,
+    .catalog-group { border-color: #35312d; background: #1b1917; }
+    .season-card-heading .season-emoji,
+    .season-menu,
+    .catalog-menu { color: var(--ink); background: #282421; }
+    .season-여름 .season-emoji { background: #40361e; }
+    .season-겨울 .season-emoji { background: #203239; }
+    .season-toggle,
+    .catalog-toggle { border-color: #5c3a30; background: #30211c; box-shadow: none; }
+    .season-card[open] .season-toggle,
+    .catalog-group[open] .catalog-toggle { background: #42271f; }
+    .catalog-heading > span,
+    .person-timeline-heading span,
+    .menu-detail-tags span { color: #a8d8b5; background: #203027; }
+    .menu-detail-dialog { color: var(--ink); background: #1c1917; }
+    .menu-detail-visual { background: #29231f; }
+    .dialog-close { color: var(--ink); background: rgba(31,28,25,.92); }
+    footer { background: #090807; }
 }
