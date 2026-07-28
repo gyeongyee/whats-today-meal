@@ -6,7 +6,7 @@
     <meta name="description" content="회사 동료들의 최근 3일 식사를 분석해 모두에게 새로운 점심 메뉴를 추천합니다.">
     <meta name="theme-color" content="#ff5c35">
     <title>오늘 뭐 먹지 AI — 점심 고민을 30초 만에</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=13">
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}?v=14">
 </head>
 <body>
 <header class="site-header">
@@ -168,11 +168,12 @@
             </div>
             <div class="seasonal-grid">
                 {% for item in seasonal_top_menus %}
-                <article class="season-card season-{{ item.season }}">
-                    <div class="season-card-heading">
-                        <span aria-hidden="true">{{ item.emoji }}</span>
+                <details class="season-card season-{{ item.season }}" open>
+                    <summary class="season-card-heading">
+                        <span class="season-emoji" aria-hidden="true">{{ item.emoji }}</span>
                         <div><h3>{{ item.season }}</h3><p>{{ item.description }}</p></div>
-                    </div>
+                        <span class="season-toggle" aria-hidden="true">⌄</span>
+                    </summary>
                     <ol>
                         {% for menu in item.menus %}
                         <li>
@@ -181,7 +182,7 @@
                         </li>
                         {% endfor %}
                     </ol>
-                </article>
+                </details>
                 {% endfor %}
             </div>
         </div>
@@ -238,6 +239,6 @@
         "menuImages": menu_image_map
     } | tojson }};
 </script>
-<script src="{{ url_for('static', path='/app.js') }}?v=13" defer></script>
+<script src="{{ url_for('static', path='/app.js') }}?v=14" defer></script>
 </body>
 </html>

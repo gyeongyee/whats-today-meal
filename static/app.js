@@ -607,6 +607,18 @@ function clearHistory() {
     showToast("모든 사람의 식사 기록을 삭제했어요.");
 }
 
+const seasonalMobileQuery = window.matchMedia("(max-width: 560px)");
+
+function syncSeasonalAccordion(mediaQuery) {
+    document.querySelectorAll(".season-card").forEach((card) => {
+        if (mediaQuery.matches) {
+            card.removeAttribute("open");
+        } else {
+            card.setAttribute("open", "");
+        }
+    });
+}
+
 /*
  * 사람별 날짜 기록은 브라우저에만 보관합니다.
  * 추천 요청에는 최근 3일치만 전송되고 서버에는 저장되지 않습니다.
@@ -636,3 +648,5 @@ document.querySelectorAll(".catalog-menu, .season-menu").forEach((button) => {
 
 migrateAndRollOver();
 syncInputsFromStore();
+syncSeasonalAccordion(seasonalMobileQuery);
+seasonalMobileQuery.addEventListener("change", (event) => syncSeasonalAccordion(event));
