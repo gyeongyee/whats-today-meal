@@ -68,7 +68,7 @@
             <fieldset class="filter-group mood-filter-group">
                 <legend>오늘의 기분</legend>
                 <div class="preferences">
-                    <label class="preference"><input id="avoidSpicy" type="checkbox"><span>🌶️ 매운 음식 제외</span></label>
+                    <label class="preference"><input class="tag-filter" type="checkbox" value="매운맛"><span>🔥 매콤한 맛</span></label>
                     <label class="preference"><input id="preferSoup" type="checkbox"><span>🥣 따뜻한 국물</span></label>
                     <label class="preference"><input id="preferLight" type="checkbox"><span>🥬 가볍고 산뜻하게</span></label>
                     <label class="preference"><input id="preferHearty" type="checkbox"><span>💪 든든하게</span></label>
@@ -112,7 +112,7 @@
                 <fieldset class="filter-group">
                     <legend>어떤 맛과 조리법?</legend>
                     <div class="filter-chips">
-                        <label><input class="tag-filter" type="checkbox" value="매운맛"><span>🔥 매콤한 맛</span></label>
+                        <label><input id="avoidSpicy" type="checkbox"><span>🌶️ 매운 음식 제외</span></label>
                         <label><input class="tag-filter" type="checkbox" value="구이"><span>♨️ 구이·불향</span></label>
                         <label><input class="tag-filter" type="checkbox" value="튀김"><span>✨ 바삭한 튀김</span></label>
                         <label><input class="tag-filter" type="checkbox" value="향신료"><span>🌿 향신료 풍미</span></label>
@@ -243,6 +243,6 @@
         "menuImages": menu_image_map
     } | tojson }};
 </script>
-<script src="{{ url_for('static', path='/app.js') }}?v=14" defer></script>
+<script src="{{ url_for('static', path='/app.js') }}?v=16" defer></script>
 </body>
 </html>

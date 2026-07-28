@@ -619,6 +619,12 @@ function syncSeasonalAccordion(mediaQuery) {
     });
 }
 
+const preferSpicyInput = document.querySelector('.tag-filter[value="매운맛"]');
+
+function keepSpicyChoicesExclusive(changedInput, otherInput) {
+    if (changedInput.checked) otherInput.checked = false;
+}
+
 /*
  * 사람별 날짜 기록은 브라우저에만 보관합니다.
  * 추천 요청에는 최근 3일치만 전송되고 서버에는 저장되지 않습니다.
@@ -635,6 +641,12 @@ $("relaxBtn").addEventListener("click", () => {
 });
 $("addMemberBtn").addEventListener("click", addTeamMember);
 $("clearHistoryBtn").addEventListener("click", clearHistory);
+$("avoidSpicy").addEventListener("change", () => {
+    keepSpicyChoicesExclusive($("avoidSpicy"), preferSpicyInput);
+});
+preferSpicyInput.addEventListener("change", () => {
+    keepSpicyChoicesExclusive(preferSpicyInput, $("avoidSpicy"));
+});
 $("menuDetailClose").addEventListener("click", () => $("menuDetailDialog").close());
 $("menuDetailDialog").addEventListener("click", (event) => {
     if (event.target === $("menuDetailDialog")) $("menuDetailDialog").close();

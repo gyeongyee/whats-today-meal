@@ -29,7 +29,9 @@ def test_home_and_static_assets_are_served():
     assert client.get("/static/style.css").status_code == 200
     assert "style.css?v=18" in home.text
     assert 'media="(prefers-color-scheme: dark)"' in home.text
-    assert "app.js?v=14" in home.text
+    assert "app.js?v=16" in home.text
+    assert home.text.count('value="매운맛"') == 1
+    assert home.text.count('id="avoidSpicy"') == 1
     assert home.text.count('class="season-card season-') == 4
     assert home.text.count('class="catalog-group"') >= 5
     assert client.get("/static/images/menus/tofu-rice-bowl.png").status_code == 200
