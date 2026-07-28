@@ -72,6 +72,7 @@ async def index(request: Request):
             "물밀면": "/static/images/generated/mul-milmyeon.jpg",
             "물회": "/static/images/generated/mulhoe.jpg",
             "중국냉면": "/static/images/generated/chinese-naengmyeon.jpg",
+            "장어덮밥": "/static/images/generated/eel-rice-bowl.jpg",
         }
     )
     seasonal_top_menus = [

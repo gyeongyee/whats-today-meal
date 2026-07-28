@@ -37,10 +37,10 @@ def test_home_and_static_assets_are_served():
     assert home.text.count('class="catalog-group"') >= 5
     assert client.get("/static/images/menus/tofu-rice-bowl.png").status_code == 200
     assert client.get("/static/images/menus/vegan-gimbap.png").status_code == 200
-    assert home.text.count("/static/images/generated/menu-") == 267
+    assert home.text.count("/static/images/generated/menu-") == 266
     for index in (1, 22, 46, 118):
         assert client.get(f"/static/images/generated/menu-{index:03d}.jpg").status_code == 200
-    for filename in ("mul-milmyeon.jpg", "mulhoe.jpg", "chinese-naengmyeon.jpg"):
+    for filename in ("mul-milmyeon.jpg", "mulhoe.jpg", "chinese-naengmyeon.jpg", "eel-rice-bowl.jpg"):
         assert client.get(f"/static/images/generated/{filename}").status_code == 200
 
 
