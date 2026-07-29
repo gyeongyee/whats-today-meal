@@ -349,6 +349,7 @@ footer p { margin: 8px 0 0; font-size: 11px; line-height: 1.6; }
     .shell, .site-header { width: min(100% - 28px, 1120px); }
     .site-header { height: 56px; }
     .privacy-chip { display: none; }
+    .hero > div:first-child { padding-left: .3cm; }
     .hero { padding-block: 17px 23px; }
     .hero .eyebrow { margin-bottom: 7px; font-size: 10px; }
     .hero h1 { font-size: 31px; line-height: 1.12; }
