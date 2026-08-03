@@ -77,6 +77,12 @@ async def index(request: Request):
             "막국수": "/static/images/generated/makguksu.png",
             "비빔막국수": "/static/images/generated/makguksu.png",
             "곱창전골": "/static/images/generated/gopchang-jeongol.png",
+            "고등어구이": "/static/images/generated/grilled-mackerel.png",
+            "삼치구이": "/static/images/generated/grilled-spanish-mackerel.png",
+            "갈치구이": "/static/images/generated/grilled-cutlassfish.png",
+            "임연수구이": "/static/images/generated/grilled-atka-mackerel.png",
+            "조기구이": "/static/images/generated/grilled-yellow-croaker.png",
+            "생선구이정식": "/static/images/generated/grilled-fish-set.png",
         }
     )
     monthly_menus = {
