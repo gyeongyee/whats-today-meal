@@ -83,6 +83,9 @@ async def index(request: Request):
             "임연수구이": "/static/images/generated/grilled-atka-mackerel.png",
             "조기구이": "/static/images/generated/grilled-yellow-croaker.png",
             "생선구이정식": "/static/images/generated/grilled-fish-set.png",
+            "만두": "/static/images/generated/mandu.png",
+            "김치만두": "/static/images/generated/kimchi-mandu.png",
+            "고기만두": "/static/images/generated/meat-mandu.png",
         }
     )
     monthly_menus = {
