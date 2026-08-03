@@ -16,7 +16,7 @@ def test_home_and_static_assets_are_served():
     assert "점심은 맛있게" in home.text
     assert "어제와는 다르게" not in home.text
     assert "오늘 뭐 먹지 AI" in home.text
-    assert "지금 만날 수 있는 270가지 메뉴" in home.text
+    assert "지금 만날 수 있는 268가지 메뉴" in home.text
     assert "아무것도 선택하지 않아도 정상 작동합니다." in home.text
     assert 'class="filter-group mood-filter-group"' in home.text
     assert "팀원을 추가하면 모두의 어제 메뉴를 제외하고" not in home.text
@@ -52,7 +52,7 @@ def test_home_and_static_assets_are_served():
     assert home.text.count('class="catalog-group"') >= 5
     assert client.get("/static/images/menus/tofu-rice-bowl.png").status_code == 200
     assert client.get("/static/images/menus/vegan-gimbap.png").status_code == 200
-    assert home.text.count("/static/images/generated/menu-") == 251
+    assert home.text.count("/static/images/generated/menu-") == 228
     assert "/static/images/generated/makguksu.png" in home.text
     assert "/static/images/generated/gopchang-jeongol.png" in home.text
     for filename in (
@@ -68,9 +68,33 @@ def test_home_and_static_assets_are_served():
         "rabokki.png",
         "tteokgalbi-set.png",
         "oyster-gukbap.png",
+        "seonji-haejangguk.png",
+        "offal-gukbap.png",
+        "pork-bone-haejangguk.png",
+        "yangpyeong-haejangguk.png",
+        "olgaengi-soup.png",
+        "jaecheop-soup.png",
+        "seaweed-soup.png",
+        "beef-radish-soup.png",
+        "naju-gomtang.png",
+        "dogani-tang.png",
+        "oxtail-gomtang.png",
+        "half-chicken-soup.png",
+        "baeksuk.png",
+        "chueotang.png",
+        "gamjatang.png",
+        "spicy-galbitang.png",
+        "sagol-ugeojitang.png",
+        "mushroom-perilla-soup.png",
+        "perilla-sujebi.png",
     ):
         assert f"/static/images/generated/{filename}" in home.text
         assert client.get(f"/static/images/generated/{filename}").status_code == 200
+    assert "선지해장국" in home.text
+    assert "선지국밥" not in home.text
+    assert "미역국 정식" not in home.text
+    assert "뼈다귀탕" not in home.text
+    assert "들깨수제비탕" not in home.text
     for index in (1, 22, 46, 118):
         assert client.get(f"/static/images/generated/menu-{index:03d}.jpg").status_code == 200
     for filename in ("mul-milmyeon.jpg", "mulhoe.jpg", "chinese-naengmyeon.jpg", "eel-rice-bowl.jpg"):
