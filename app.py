@@ -88,6 +88,7 @@ async def index(request: Request):
             "고기만두": "/static/images/generated/meat-mandu.png",
             "라볶이": "/static/images/generated/rabokki.png",
             "떡갈비정식": "/static/images/generated/tteokgalbi-set.png",
+            "굴국밥": "/static/images/generated/oyster-gukbap.png",
         }
     )
     monthly_menus = {

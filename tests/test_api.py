@@ -52,7 +52,7 @@ def test_home_and_static_assets_are_served():
     assert home.text.count('class="catalog-group"') >= 5
     assert client.get("/static/images/menus/tofu-rice-bowl.png").status_code == 200
     assert client.get("/static/images/menus/vegan-gimbap.png").status_code == 200
-    assert home.text.count("/static/images/generated/menu-") == 252
+    assert home.text.count("/static/images/generated/menu-") == 251
     assert "/static/images/generated/makguksu.png" in home.text
     assert "/static/images/generated/gopchang-jeongol.png" in home.text
     for filename in (
@@ -67,6 +67,7 @@ def test_home_and_static_assets_are_served():
         "meat-mandu.png",
         "rabokki.png",
         "tteokgalbi-set.png",
+        "oyster-gukbap.png",
     ):
         assert f"/static/images/generated/{filename}" in home.text
         assert client.get(f"/static/images/generated/{filename}").status_code == 200
