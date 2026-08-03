@@ -74,6 +74,9 @@ async def index(request: Request):
             "물회": "/static/images/generated/mulhoe.jpg",
             "중국냉면": "/static/images/generated/chinese-naengmyeon.jpg",
             "장어덮밥": "/static/images/generated/eel-rice-bowl.jpg",
+            "막국수": "/static/images/generated/makguksu.png",
+            "비빔막국수": "/static/images/generated/makguksu.png",
+            "곱창전골": "/static/images/generated/gopchang-jeongol.png",
         }
     )
     monthly_menus = {
@@ -84,7 +87,7 @@ async def index(request: Request):
         5: ["냉면", "회덮밥", "초밥", "쌀국수", "막국수"],
         6: ["물밀면", "콩국수", "비빔밀면", "물회", "삼계탕"],
         7: ["물냉면", "콩국수", "삼계탕", "물회", "중국냉면"],
-        8: ["메밀국수", "막국수", "회덮밥", "장어덮밥", "초밥"],
+        8: ["메밀소바", "막국수", "회덮밥", "장어덮밥", "초밥"],
         9: ["버섯전골", "추어탕", "고등어구이", "들깨칼국수", "장어덮밥"],
         10: ["갈비탕", "육개장", "불고기전골", "김치찜", "추어탕"],
         11: ["칼국수", "부대찌개", "곱창전골", "알탕", "감자탕"],

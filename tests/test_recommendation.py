@@ -179,6 +179,9 @@ def test_expanded_lunch_menus_are_deduplicated_and_classified():
     assert by_name["돈가스김밥"]["cuisine"] == "한식"
     assert by_name["카레라이스"]["kind"] == "덮밥"
     assert by_name["돈부리"]["kind"] == "덮밥"
+    assert "메밀국수" not in by_name
+    assert by_name["메밀소바"]["cuisine"] == "일식"
+    assert by_name["메밀소바"]["kind"] == "면"
     assert "국물" not in by_name["탕수육 정식"]["tags"]
     assert by_name["물회"]["cuisine"] == "일식"
     assert by_name["중국냉면"]["cuisine"] == "중식"

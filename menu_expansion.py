@@ -113,7 +113,7 @@ EXPANDED_MENU_GROUPS = {
 물밀면
 비빔밀면
 콩국수
-메밀국수
+메밀소바
 판모밀
 우동
 김치우동
@@ -244,6 +244,7 @@ EXPANDED_MENU_GROUPS = {
 JAPANESE_KEYWORDS = (
     "우동",
     "모밀",
+    "소바",
     "초밥",
     "회정식",
     "돈부리",
@@ -307,7 +308,7 @@ def _kind(name: str, group: str) -> str:
         return "찌개"
     if "전골" in name:
         return "전골"
-    if any(keyword in name for keyword in ("국수", "냉면", "밀면", "막국수", "쫄면", "칼국수", "수제비", "모밀", "우동", "라면", "짜장면", "짬뽕", "팟타이", "분짜", "쌀국수")):
+    if any(keyword in name for keyword in ("국수", "냉면", "밀면", "막국수", "쫄면", "칼국수", "수제비", "모밀", "소바", "우동", "라면", "짜장면", "짬뽕", "팟타이", "분짜", "쌀국수")):
         return "면"
     if any(keyword in name for keyword in ("김밥", "햄버거", "샌드위치")):
         return "간편식"
@@ -435,7 +436,7 @@ def expand_menu_catalog(base_catalog: Iterable[dict[str, object]]) -> list[dict[
                     "열무국수",
                     "콩국수",
                     "막국수",
-                    "메밀국수",
+                    "메밀소바",
                     "판모밀",
                     "소바",
                     "물회",
@@ -488,7 +489,7 @@ IMAGE_ALIAS_RULES = (
     (("잔치국수", "멸치국수", "김치말이국수"), "잔치국수"),
     (("칼국수", "수제비"), "칼국수"),
     (("막국수", "냉면", "밀면"), "냉면"),
-    (("메밀국수", "판모밀"), "소바"),
+    (("메밀소바", "판모밀"), "소바"),
     (("우동",), "우동"),
     (("라면", "라볶이"), "라면"),
     (("비빔밥",), "비빔밥"),
