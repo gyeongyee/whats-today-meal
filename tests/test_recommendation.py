@@ -149,8 +149,8 @@ def test_new_diverse_menus_include_burrito():
 
     by_name = {menu["name"]: menu for menu in MENU_CATALOG}
     assert "부리또" in by_name
-    assert len(MENU_CATALOG) == 268
-    assert len({menu["name"] for menu in MENU_CATALOG}) == 268
+    assert len(MENU_CATALOG) == 266
+    assert len({menu["name"] for menu in MENU_CATALOG}) == 266
     assert by_name["카레"]["cuisine"] == "일식"
     assert by_name["난과 커리"]["cuisine"] == "인도"
     assert by_name["로코모코"]["cuisine"] == "양식"

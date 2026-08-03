@@ -2,7 +2,8 @@ from datetime import datetime, timedelta, timezone
 
 from fastapi.testclient import TestClient
 
-from app import app
+from app import BASE_DIR, REFRESHED_IMAGE_OVERRIDES, app
+from menu_data import MENU_CATALOG
 
 client = TestClient(app)
 
@@ -16,7 +17,7 @@ def test_home_and_static_assets_are_served():
     assert "점심은 맛있게" in home.text
     assert "어제와는 다르게" not in home.text
     assert "오늘 뭐 먹지 AI" in home.text
-    assert "지금 만날 수 있는 268가지 메뉴" in home.text
+    assert "지금 만날 수 있는 266가지 메뉴" in home.text
     assert "아무것도 선택하지 않아도 정상 작동합니다." in home.text
     assert 'class="filter-group mood-filter-group"' in home.text
     assert "팀원을 추가하면 모두의 어제 메뉴를 제외하고" not in home.text
@@ -52,7 +53,7 @@ def test_home_and_static_assets_are_served():
     assert home.text.count('class="catalog-group"') >= 5
     assert client.get("/static/images/menus/tofu-rice-bowl.png").status_code == 200
     assert client.get("/static/images/menus/vegan-gimbap.png").status_code == 200
-    assert home.text.count("/static/images/generated/menu-") == 228
+    assert home.text.count("/static/images/generated/menu-") == 116
     assert "/static/images/generated/makguksu.png" in home.text
     assert "/static/images/generated/gopchang-jeongol.png" in home.text
     for filename in (
@@ -87,6 +88,13 @@ def test_home_and_static_assets_are_served():
         "sagol-ugeojitang.png",
         "mushroom-perilla-soup.png",
         "perilla-sujebi.png",
+        "kimchi-bean-sprout-gukbap.jpg",
+        "flower-crab-stew.jpg",
+        "squid-stew.jpg",
+        "mushroom-jeongol.jpg",
+        "bulgogi-jeongol.jpg",
+        "mandu-jeongol.jpg",
+        "tofu-jeongol.jpg",
     ):
         assert f"/static/images/generated/{filename}" in home.text
         assert client.get(f"/static/images/generated/{filename}").status_code == 200
@@ -95,10 +103,35 @@ def test_home_and_static_assets_are_served():
     assert "미역국 정식" not in home.text
     assert "뼈다귀탕" not in home.text
     assert "들깨수제비탕" not in home.text
+    assert "김치콩나물국밥" in home.text
+    assert "김치국밥" not in home.text
+    assert "따로국밥" not in home.text
+    assert "짜글이찌개" not in home.text
     for index in (1, 22, 46, 118):
         assert client.get(f"/static/images/generated/menu-{index:03d}.jpg").status_code == 200
     for filename in ("mul-milmyeon.jpg", "mulhoe.jpg", "chinese-naengmyeon.jpg", "eel-rice-bowl.jpg"):
         assert client.get(f"/static/images/generated/{filename}").status_code == 200
+
+
+def test_refreshed_menu_photos_are_complete_and_unique():
+    home = client.get("/")
+    catalog_names = {menu["name"] for menu in MENU_CATALOG}
+
+    assert len(REFRESHED_IMAGE_OVERRIDES) == 105
+    assert set(REFRESHED_IMAGE_OVERRIDES) <= catalog_names
+    assert len(set(REFRESHED_IMAGE_OVERRIDES.values())) == 105
+
+    shadowed_by_reviewed_photos = {
+        menu_name
+        for menu_name, image_path in REFRESHED_IMAGE_OVERRIDES.items()
+        if image_path not in home.text
+    }
+    assert shadowed_by_reviewed_photos == {"꽃게탕", "오징어찌개"}
+
+    for image_path in REFRESHED_IMAGE_OVERRIDES.values():
+        local_path = BASE_DIR / image_path.lstrip("/")
+        assert local_path.is_file()
+        assert local_path.stat().st_size > 0
 
 
 def test_health_endpoint():

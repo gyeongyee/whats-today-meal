@@ -18,6 +18,32 @@ from recommendation_engine import RecommendationEngine
 BASE_DIR = Path(__file__).resolve().parent
 load_dotenv(BASE_DIR / ".env")
 
+
+def _load_refreshed_image_overrides() -> dict[str, str]:
+    refreshed_dir = BASE_DIR / "static" / "images" / "generated" / "refreshed"
+    manifest_paths = (
+        refreshed_dir / "audit_batch_a.tsv",
+        BASE_DIR / "audit_batch_b.tsv",
+        refreshed_dir / "audit_batch_b.tsv",
+        BASE_DIR / "audit_batch_c.tsv",
+        refreshed_dir / "audit_batch_c.tsv",
+    )
+    overrides: dict[str, str] = {}
+    for manifest_path in manifest_paths:
+        if not manifest_path.exists():
+            continue
+        for line in manifest_path.read_text(encoding="utf-8").splitlines():
+            if not line.strip() or line.lstrip().startswith("#"):
+                continue
+            separator = "|" if "|" in line else "\t"
+            menu_name, separator, image_path = line.partition(separator)
+            if separator and menu_name.strip() and image_path.strip():
+                overrides[menu_name.strip()] = image_path.strip()
+    return overrides
+
+
+REFRESHED_IMAGE_OVERRIDES = _load_refreshed_image_overrides()
+
 app = FastAPI(
     title="오늘 뭐 먹지 AI",
     description="최근 3일 식사를 고려한 점심 메뉴 추천 서비스",
@@ -70,6 +96,15 @@ async def index(request: Request):
         )
     menu_image_map.update(
         {
+            menu_name: image_path
+            for menu_name, image_path in REFRESHED_IMAGE_OVERRIDES.items()
+            if menu_name in menu_image_map
+        }
+    )
+    # Photos the user explicitly reviewed always take precedence over the
+    # broad ingredient-based refresh batch.
+    menu_image_map.update(
+        {
             "물밀면": "/static/images/generated/mul-milmyeon.jpg",
             "물회": "/static/images/generated/mulhoe.jpg",
             "중국냉면": "/static/images/generated/chinese-naengmyeon.jpg",
@@ -115,6 +150,13 @@ async def index(request: Request):
             "만둣국": "/static/images/generated/menu-085.jpg",
             "순두부국밥": "/static/images/generated/menu-006.jpg",
             "감자수제비": "/static/images/generated/menu-106.jpg",
+            "김치콩나물국밥": "/static/images/generated/kimchi-bean-sprout-gukbap.jpg",
+            "꽃게탕": "/static/images/generated/flower-crab-stew.jpg",
+            "오징어찌개": "/static/images/generated/squid-stew.jpg",
+            "버섯전골": "/static/images/generated/mushroom-jeongol.jpg",
+            "불고기전골": "/static/images/generated/bulgogi-jeongol.jpg",
+            "만두전골": "/static/images/generated/mandu-jeongol.jpg",
+            "두부전골": "/static/images/generated/tofu-jeongol.jpg",
         }
     )
     monthly_menus = {
